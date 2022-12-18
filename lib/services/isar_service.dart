@@ -9,30 +9,28 @@ class IsarService {
   IsarService() {
     db = openDB();
   }
-
-
+// easy to  change  
   Future<void> saveModule(Module newModule) async {
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.modules.putSync(newModule));
-  } 
-
+  }
+// easy 
   Future<void> saveQuiz(Quiz newQuiz) async {
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.quizs.putSync(newQuiz));
   }
-
+// easy
   Future<void> saveQuestion(Question newQuestion) async {
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.questions.putSync(newQuestion));
   }
-
-
+// easy
   Future<List<Module>> getAllModules() async {
     final isar = await db;
     return await isar.modules.where().findAll();
   }
-
-    Stream<List<Module>> listenToModules() async* {
+//esasy
+  Stream<List<Module>> listenToModules() async* {
     final isar = await db;
     yield* isar.modules.where().watch(fireImmediately: true);
   }
@@ -42,17 +40,22 @@ class IsarService {
     await isar.writeTxn(() => isar.clear());
   }
 
-
 // here we need a backlink
   Future<List<Quiz>> getQuizzes(Module module) async {
     final isar = await db;
     return await isar.quizs
         .filter()
-        .module((q) => q.idEqualTo(module.id))
+        .containingModule((q) => q.idEqualTo(module.id))
         .findAll();
   }
+// easy
+  Stream<List<Quiz>> listenToQuizzes(Module module) async* {
+    final isar = await db;
+    yield* isar.quizs.filter().containingModule((q) => q.idEqualTo(module.id)).watch(fireImmediately: true);
+  }
 
-    Future<List<Question>> getQuestions(Quiz quiz) async {
+  //easy
+  Future<List<Question>> getQuestions(Quiz quiz) async {
     final isar = await db;
     return await isar.questions
         .filter()
@@ -60,19 +63,12 @@ class IsarService {
         .findAll();
   }
 
-/*
-  Future<Teacher?> getTeacherFor(Course course) async {
+    Stream<List<Question>> listenToQuestions(Quiz quiz) async* {
     final isar = await db;
-
-    final teacher = await isar.teachers
-        .filter()
-        .course((q) => q.idEqualTo(course.id))
-        .findFirst();
-
-    return teacher;
+    yield* isar.questions.filter().quiz((q) => q.idEqualTo(quiz.id)).watch(fireImmediately: true);
   }
 
-  */
+
 
   Future<Isar> openDB() async {
     if (Isar.instanceNames.isEmpty) {

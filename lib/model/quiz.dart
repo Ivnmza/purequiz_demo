@@ -10,8 +10,9 @@ import 'question.dart';
   Id id  = Isar.autoIncrement;
 
   late String title;
-  
+
+  @Backlink(to: "quiz")
   final questions = IsarLinks<Question>();
-  final module = IsarLink<Module>();
-  
+
+  final containingModule = IsarLink<Module>();
  }

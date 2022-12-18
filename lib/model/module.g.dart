@@ -31,10 +31,11 @@ const ModuleSchema = CollectionSchema(
   indexes: {},
   links: {
     r'quizzes': LinkSchema(
-      id: 7624285877009910838,
+      id: -4151988383716335733,
       name: r'quizzes',
       target: r'Quiz',
       single: false,
+      linkName: r'containingModule',
     )
   },
   embeddedSchemas: {},

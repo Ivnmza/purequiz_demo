@@ -31,14 +31,15 @@ const QuizSchema = CollectionSchema(
   indexes: {},
   links: {
     r'questions': LinkSchema(
-      id: 9190268963433020190,
+      id: -4631745017969898877,
       name: r'questions',
       target: r'Question',
       single: false,
+      linkName: r'quiz',
     ),
-    r'module': LinkSchema(
-      id: 7879723806640518929,
-      name: r'module',
+    r'containingModule': LinkSchema(
+      id: 6224449989599828184,
+      name: r'containingModule',
       target: r'Module',
       single: true,
     )
@@ -100,14 +101,15 @@ Id _quizGetId(Quiz object) {
 }
 
 List<IsarLinkBase<dynamic>> _quizGetLinks(Quiz object) {
-  return [object.questions, object.module];
+  return [object.questions, object.containingModule];
 }
 
 void _quizAttach(IsarCollection<dynamic> col, Id id, Quiz object) {
   object.id = id;
   object.questions
       .attach(col, col.isar.collection<Question>(), r'questions', id);
-  object.module.attach(col, col.isar.collection<Module>(), r'module', id);
+  object.containingModule
+      .attach(col, col.isar.collection<Module>(), r'containingModule', id);
 }
 
 extension QuizQueryWhereSort on QueryBuilder<Quiz, Quiz, QWhere> {
@@ -426,16 +428,16 @@ extension QuizQueryLinks on QueryBuilder<Quiz, Quiz, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Quiz, Quiz, QAfterFilterCondition> module(
+  QueryBuilder<Quiz, Quiz, QAfterFilterCondition> containingModule(
       FilterQuery<Module> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'module');
+      return query.link(q, r'containingModule');
     });
   }
 
-  QueryBuilder<Quiz, Quiz, QAfterFilterCondition> moduleIsNull() {
+  QueryBuilder<Quiz, Quiz, QAfterFilterCondition> containingModuleIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'module', 0, true, 0, true);
+      return query.linkLength(r'containingModule', 0, true, 0, true);
     });
   }
 }

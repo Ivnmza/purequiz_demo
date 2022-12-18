@@ -9,6 +9,9 @@ class Module{
   Id id = Isar.autoIncrement;
 
   late String moduleTitle;
+
+  @Backlink(to: "containingModule")
   final quizzes = IsarLinks<Quiz>();
+
   
 }

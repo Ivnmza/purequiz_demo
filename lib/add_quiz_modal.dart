@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:purequiz_demo/model/quiz.dart';
 import '/model/module.dart';
 import '/services/isar_service.dart';
 
-class ModuleModal extends StatefulWidget {
+class AddQuizModal extends StatefulWidget {
   final IsarService service;
-  const ModuleModal(this.service, {Key? key}) : super(key: key);
+  final Module module;
+  const AddQuizModal(this.service, this.module, {Key? key}) : super(key: key);
 
   @override
-  State<ModuleModal> createState() => _ModuleModalState();
+  State<AddQuizModal> createState() => _AddQuizModalState();
 }
 
-class _ModuleModalState extends State<ModuleModal> {
+class _AddQuizModalState extends State<AddQuizModal> {
   final _formKey = GlobalKey<FormState>();
   final _textController = TextEditingController();
 
@@ -24,14 +26,14 @@ class _ModuleModalState extends State<ModuleModal> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text("Enter Info",
+            Text("Enter Quiz",
                 style: Theme.of(context).textTheme.headlineSmall),
             TextFormField(
               controller: _textController,
               autofocus: true,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return "Info not allowed to be empty";
+                  return "Quiz title not allowed to be empty";
                 }
                 return null;
               },
@@ -39,15 +41,17 @@ class _ModuleModalState extends State<ModuleModal> {
             ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    widget.service.saveModule(Module()..moduleTitle = _textController.text);
+                    widget.service.saveQuiz(Quiz()
+                      ..title = _textController.text
+                      ..containingModule.value = widget.module);
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(
-                            "New Module '${_textController.text}' saved in DB")));
+                            "New Quiz '${_textController.text}' saved in DB")));
 
                     Navigator.pop(context);
                   }
                 },
-                child: const Text("Add new topic"))
+                child: const Text("Add new Quiz"))
           ],
         ),
       ),
