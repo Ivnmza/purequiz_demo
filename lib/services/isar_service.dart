@@ -9,35 +9,34 @@ class IsarService {
   IsarService() {
     db = openDB();
   }
-// easy to  change  
+// easy to  change
   Future<void> saveModule(Module newModule) async {
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.modules.putSync(newModule));
   }
-// easy 
+
+// easy
   Future<void> saveQuiz(Quiz newQuiz) async {
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.quizs.putSync(newQuiz));
   }
+
 // easy
   Future<void> saveQuestion(Question newQuestion) async {
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.questions.putSync(newQuestion));
   }
+
 // easy
   Future<List<Module>> getAllModules() async {
     final isar = await db;
     return await isar.modules.where().findAll();
   }
+
 //esasy
   Stream<List<Module>> listenToModules() async* {
     final isar = await db;
     yield* isar.modules.where().watch(fireImmediately: true);
-  }
-
-  Future<void> cleanDb() async {
-    final isar = await db;
-    await isar.writeTxn(() => isar.clear());
   }
 
 // here we need a backlink
@@ -48,10 +47,14 @@ class IsarService {
         .containingModule((q) => q.idEqualTo(module.id))
         .findAll();
   }
+
 // easy
   Stream<List<Quiz>> listenToQuizzes(Module module) async* {
     final isar = await db;
-    yield* isar.quizs.filter().containingModule((q) => q.idEqualTo(module.id)).watch(fireImmediately: true);
+    yield* isar.quizs
+        .filter()
+        .containingModule((q) => q.idEqualTo(module.id))
+        .watch(fireImmediately: true);
   }
 
   //easy
@@ -63,12 +66,16 @@ class IsarService {
         .findAll();
   }
 
-    Stream<List<Question>> listenToQuestions(Quiz quiz) async* {
+  Stream<List<Question>> listenToQuestions(Quiz quiz) async* {
     final isar = await db;
-    yield* isar.questions.filter().quiz((q) => q.idEqualTo(quiz.id)).watch(fireImmediately: true);
+    yield* isar.questions
+        .filter()
+        .quiz((q) => q.idEqualTo(quiz.id))
+        .watch(fireImmediately: true);
   }
 
-
+  ///////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////
 
   Future<Isar> openDB() async {
     if (Isar.instanceNames.isEmpty) {
@@ -80,4 +87,11 @@ class IsarService {
 
     return Future.value(Isar.getInstance());
   }
+
+  Future<void> cleanDb() async {
+    final isar = await db;
+    await isar.writeTxn(() => isar.clear());
+  }
+
 }
+
