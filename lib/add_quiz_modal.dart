@@ -43,7 +43,8 @@ class _AddQuizModalState extends State<AddQuizModal> {
                   if (_formKey.currentState!.validate()) {
                     widget.service.saveQuiz(Quiz()
                       ..title = _textController.text
-                      ..containingModule.value = widget.module);
+                      ..containingModule.value = widget.module
+                      ..containingModuleString = widget.module.moduleTitle);
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(
                             "New Quiz '${_textController.text}' saved in DB")));

@@ -34,7 +34,18 @@ class ModuleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("PureQuiz")),
+      appBar: AppBar(
+        title: const Text("PureQuiz"),
+        actions: [
+           IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              var json = service.exportAllToJSON().then((value) => print("$value"));
+              var two = service.exportAlQuizlToJSON().then((value) => print("$value"));
+            },
+          )
+        ],
+      ),
       bottomNavigationBar: ElevatedButton(
         onPressed: () {
           showModalBottomSheet(
@@ -59,19 +70,20 @@ class ModuleScreen extends StatelessWidget {
                 children: snapshot.hasData
                     ? snapshot.data!.map((module) {
                         return ElevatedButton(
-                            onPressed: () {
-                              print("Going to Quiz List screen");
-                              print(module.moduleTitle);
-                              QuizListScreen.navigate(context, module, service);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color.fromARGB(255, 89, 80, 253),
-                              padding: const EdgeInsets.all(5.0),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0)),
-                            ),
-                            child: Text(module.moduleTitle),
-                            );
+                          onPressed: () {
+                            print("Going to Quiz List screen");
+                            print(module.moduleTitle);
+                            QuizListScreen.navigate(context, module, service);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 89, 80, 253),
+                            padding: const EdgeInsets.all(5.0),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                          ),
+                          child: Text(module.moduleTitle),
+                        );
                       }).toList()
                     : [],
               ),

@@ -76,6 +76,33 @@ class IsarService {
 
   ///////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
+  
+
+
+Future<List<Map<String,dynamic>>> exportAllToJSON() async{
+  final isar = await db;
+    return await isar.modules.where().exportJson();
+}
+
+
+Future<List<Map<String,dynamic>>> exportAlQuizlToJSON() async{
+  final isar = await db;
+    return await isar.quizs.where().exportJson();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+  ///////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////
 
   Future<Isar> openDB() async {
     if (Isar.instanceNames.isEmpty) {

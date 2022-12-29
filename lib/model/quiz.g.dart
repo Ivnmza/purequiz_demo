@@ -17,8 +17,13 @@ const QuizSchema = CollectionSchema(
   name: r'Quiz',
   id: 3912563531471134748,
   properties: {
-    r'title': PropertySchema(
+    r'containingModuleString': PropertySchema(
       id: 0,
+      name: r'containingModuleString',
+      type: IsarType.string,
+    ),
+    r'title': PropertySchema(
+      id: 1,
       name: r'title',
       type: IsarType.string,
     )
@@ -57,6 +62,7 @@ int _quizEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.containingModuleString.length * 3;
   bytesCount += 3 + object.title.length * 3;
   return bytesCount;
 }
@@ -67,7 +73,8 @@ void _quizSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.title);
+  writer.writeString(offsets[0], object.containingModuleString);
+  writer.writeString(offsets[1], object.title);
 }
 
 Quiz _quizDeserialize(
@@ -77,8 +84,9 @@ Quiz _quizDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Quiz();
+  object.containingModuleString = reader.readString(offsets[0]);
   object.id = id;
-  object.title = reader.readString(offsets[0]);
+  object.title = reader.readString(offsets[1]);
   return object;
 }
 
@@ -90,6 +98,8 @@ P _quizDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readString(offset)) as P;
+    case 1:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -188,6 +198,142 @@ extension QuizQueryWhere on QueryBuilder<Quiz, Quiz, QWhereClause> {
 }
 
 extension QuizQueryFilter on QueryBuilder<Quiz, Quiz, QFilterCondition> {
+  QueryBuilder<Quiz, Quiz, QAfterFilterCondition> containingModuleStringEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'containingModuleString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Quiz, Quiz, QAfterFilterCondition>
+      containingModuleStringGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'containingModuleString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Quiz, Quiz, QAfterFilterCondition>
+      containingModuleStringLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'containingModuleString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Quiz, Quiz, QAfterFilterCondition> containingModuleStringBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'containingModuleString',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Quiz, Quiz, QAfterFilterCondition>
+      containingModuleStringStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'containingModuleString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Quiz, Quiz, QAfterFilterCondition>
+      containingModuleStringEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'containingModuleString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Quiz, Quiz, QAfterFilterCondition>
+      containingModuleStringContains(String value,
+          {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'containingModuleString',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Quiz, Quiz, QAfterFilterCondition> containingModuleStringMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'containingModuleString',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Quiz, Quiz, QAfterFilterCondition>
+      containingModuleStringIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'containingModuleString',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Quiz, Quiz, QAfterFilterCondition>
+      containingModuleStringIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'containingModuleString',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<Quiz, Quiz, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -443,6 +589,18 @@ extension QuizQueryLinks on QueryBuilder<Quiz, Quiz, QFilterCondition> {
 }
 
 extension QuizQuerySortBy on QueryBuilder<Quiz, Quiz, QSortBy> {
+  QueryBuilder<Quiz, Quiz, QAfterSortBy> sortByContainingModuleString() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'containingModuleString', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Quiz, Quiz, QAfterSortBy> sortByContainingModuleStringDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'containingModuleString', Sort.desc);
+    });
+  }
+
   QueryBuilder<Quiz, Quiz, QAfterSortBy> sortByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
@@ -457,6 +615,18 @@ extension QuizQuerySortBy on QueryBuilder<Quiz, Quiz, QSortBy> {
 }
 
 extension QuizQuerySortThenBy on QueryBuilder<Quiz, Quiz, QSortThenBy> {
+  QueryBuilder<Quiz, Quiz, QAfterSortBy> thenByContainingModuleString() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'containingModuleString', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Quiz, Quiz, QAfterSortBy> thenByContainingModuleStringDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'containingModuleString', Sort.desc);
+    });
+  }
+
   QueryBuilder<Quiz, Quiz, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -483,6 +653,14 @@ extension QuizQuerySortThenBy on QueryBuilder<Quiz, Quiz, QSortThenBy> {
 }
 
 extension QuizQueryWhereDistinct on QueryBuilder<Quiz, Quiz, QDistinct> {
+  QueryBuilder<Quiz, Quiz, QDistinct> distinctByContainingModuleString(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'containingModuleString',
+          caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Quiz, Quiz, QDistinct> distinctByTitle(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -495,6 +673,13 @@ extension QuizQueryProperty on QueryBuilder<Quiz, Quiz, QQueryProperty> {
   QueryBuilder<Quiz, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Quiz, String, QQueryOperations>
+      containingModuleStringProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'containingModuleString');
     });
   }
 
