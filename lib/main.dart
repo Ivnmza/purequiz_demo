@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:purequiz_demo/module_modal.dart';
 
+import 'module_modal.dart';
 import 'model/module.dart';
 import 'quiz_list_screen.dart';
 import 'services/isar_service.dart';
+
+import 'dart:io';
+import 'dart:async';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,6 +35,8 @@ class ModuleScreen extends StatelessWidget {
   ModuleScreen({super.key});
   final service = IsarService();
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,10 +44,13 @@ class ModuleScreen extends StatelessWidget {
         title: const Text("PureQuiz"),
         actions: [
            IconButton(
-            icon: Icon(Icons.settings),
+            icon:  const Icon(Icons.settings),
             onPressed: () {
-              var json = service.exportAllToJSON().then((value) => print("$value"));
-              var two = service.exportAlQuizlToJSON().then((value) => print("$value"));
+            service.exportAllToJSON().then((value) => print("MODULES JSON: $value"));
+            service.exportAlQuizlToJSON().then((value) => print("QUIZS JSON: $value"));
+            service.exportAllQuestionsToJSON().then((value) => print("QUESTIONS JSON: $value"));
+
+
             },
           )
         ],
@@ -71,8 +80,6 @@ class ModuleScreen extends StatelessWidget {
                     ? snapshot.data!.map((module) {
                         return ElevatedButton(
                           onPressed: () {
-                            print("Going to Quiz List screen");
-                            print(module.moduleTitle);
                             QuizListScreen.navigate(context, module, service);
                           },
                           style: ElevatedButton.styleFrom(
@@ -107,9 +114,14 @@ class ModuleScreen extends StatelessWidget {
 //  5: write quiz screen ui
 // modal easy but  still a bit  difficult
 
-// 12.1610pm -2am - having trouble assigning the containing module to the quiz instance and displaying it
+// 12.16 10pm -2am - having trouble assigning the containing module to the quiz instance and displaying it
 // fixed by running  the tutorial app and seeing that the correct way of accessing and setting the moodule was the .value variable
 
 // 12.16 2pm
 // implementing question screen
 // first is implement add question modal in quiz/moduledetail screen
+//12/28 modified passing service and routes to pass through module and quiz information for storage into a json object
+//12.29 implementing local storage of question list json to   get ready for cloud storage
+
+
+//12.29 7.20pm - 

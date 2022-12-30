@@ -7,14 +7,15 @@ import 'services/isar_service.dart';
 import 'model/module.dart';
 
 class QuizListScreen extends StatelessWidget {
-  const QuizListScreen({Key? key, required this.module, required this.service}): super(key: key);
+  const QuizListScreen({Key? key, required this.module, required this.service})
+      : super(key: key);
   final Module module;
   final IsarService service;
 
   static void navigate(context, Module module, IsarService service) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return QuizListScreen(module: module, service: service);
-      }));
+    }));
   }
 
   @override
@@ -27,7 +28,7 @@ class QuizListScreen extends StatelessWidget {
               context: context,
               builder: (context) {
                 // build QuizModal
-                return AddQuizModal(service,module);
+                return AddQuizModal(service, module);
               });
         },
         child: const Text("Add Quiz"),
@@ -46,19 +47,21 @@ class QuizListScreen extends StatelessWidget {
                 children: snapshot.hasData
                     ? snapshot.data!.map((quiz) {
                         return ElevatedButton(
-                            onPressed: () {
-                              print("Going to Quiz details screen");
-                              QuestionListScreen.navigate(context, quiz, service);
-                              print(quiz.title);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color.fromARGB(255, 89, 80, 253),
-                              padding: const EdgeInsets.all(5.0),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0)),
-                            ),
-                            child: Text(quiz.title),
-                            );
+                          onPressed: () {
+                            QuestionListScreen.navigate(
+                                context, quiz, module, service);
+                            print("Going to Quiz details screen");
+                            print(quiz.title);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 89, 80, 253),
+                            padding: const EdgeInsets.all(5.0),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                          ),
+                          child: Text(quiz.title),
+                        );
                       }).toList()
                     : [],
               ),

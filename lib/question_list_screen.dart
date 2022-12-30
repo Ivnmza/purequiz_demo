@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 
 import 'add_question_modal.dart';
+import 'model/module.dart';
 import 'model/question.dart';
 import 'model/quiz.dart';
 import 'services/isar_service.dart';
 
 class QuestionListScreen extends StatelessWidget {
   const QuestionListScreen(
-      {super.key, required this.quiz, required this.service});
+      {super.key, required this.quiz, required this.service, required this.module});
   //1: needs Quiz
   final Quiz quiz;
+  final Module module;
   //2: it needs the service
   final IsarService service;
   //3: create custom nav - customize from module nav
   //4:  created stream service method to listen for questions
 
-  static void navigate(context, Quiz quiz, IsarService service) {
+  static void navigate(context, Quiz quiz, Module module, IsarService service) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return QuestionListScreen(quiz: quiz, service: service);
+      return QuestionListScreen(quiz: quiz, service: service, module: module);
     }));
   }
 
@@ -32,7 +34,7 @@ class QuestionListScreen extends StatelessWidget {
           onPressed: () {
             showModalBottomSheet(
                 context: context,
-                builder: (context) => AddQuestionModal(service, quiz));
+                builder: (context) => AddQuestionModal(service, quiz, module));
           },
           child: const Text("Add Question"),
         ),
