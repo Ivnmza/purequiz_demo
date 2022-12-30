@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:purequiz_demo/model/question.dart';
 import 'package:purequiz_demo/model/quiz.dart';
 import '/services/isar_service.dart';
+import 'model/module.dart';
 
 class AddQuestionModal extends StatefulWidget {
   final IsarService service;
   final Quiz quiz;
-  const AddQuestionModal(this.service, this.quiz, {Key? key}) : super(key: key);
+  final Module module;
+  const AddQuestionModal(this.service, this.quiz, this.module, {Key? key}) : super(key: key);
   @override
   State<AddQuestionModal> createState() => _AddQuestionModalState();
 }
@@ -51,11 +53,15 @@ class _AddQuestionModalState extends State<AddQuestionModal> {
             ),
             ElevatedButton(
                 onPressed: () async {
+                  
                   if (_questionFormKey.currentState!.validate()) {
                     widget.service.saveQuestion(Question()
                       ..question = _questionController.text
                       ..answer = _answerController.text
-                      ..quiz.value = widget.quiz);
+                      ..quiz.value = widget.quiz
+                      ..quizString = widget.quiz.title
+                      ..moduleString = widget.module.moduleTitle
+                      ..module.value = widget.module);
                     Navigator.pop(context);
                   }
                 },
