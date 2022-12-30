@@ -2,6 +2,7 @@ import 'package:isar/isar.dart';
 import '../model/module.dart';
 import '../model/question.dart';
 import '../model/quiz.dart';
+import '../model/test.dart';
 
 class IsarService {
   late Future<Isar> db;
@@ -91,12 +92,10 @@ Future<List<Map<String,dynamic>>> exportAlQuizlToJSON() async{
 }
 
 
-
-
-
-
-
-
+Future<List<Map<String,dynamic>>> exportAllQuestionsToJSON() async{
+  final isar = await db;
+    return await isar.questions.where().exportJson();
+}
 
 
 
