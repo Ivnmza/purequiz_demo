@@ -35,22 +35,33 @@ class ModuleScreen extends StatelessWidget {
   ModuleScreen({super.key});
   final service = IsarService();
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("PureQuiz"),
         actions: [
-           IconButton(
-            icon:  const Icon(Icons.settings),
-            onPressed: () {
-            service.exportAllToJSON().then((value) => print("MODULES JSON: $value"));
-            service.exportAlQuizlToJSON().then((value) => print("QUIZS JSON: $value"));
-            service.exportAllQuestionsToJSON().then((value) => print("QUESTIONS JSON: $value"));
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () async {
+              print("/////////////");
+              await service
+                  .exportAllToJSON()
+                  .then((value) => print("MODULES JSON: $value"));
+              await service
+                  .exportAlQuizlToJSON()
+                  .then((value) => print("QUIZS JSON: $value"));
+              await service
+                  .exportAllQuestionsToJSON()
+                  .then((value) => print("QUESTIONS JSON: $value"));
+              print("////////");
 
-
+              final filename = "test";
+              final file = File(
+                  '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+                service.exportAllQuestionsToJSON().then((value) => file.writeAsString('$value'));
+            print("Location: $file");
+            print("File contents:" + file.readAsStringSync());
             },
           )
         ],
