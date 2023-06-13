@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 import 'add_question_modal.dart';
 import 'model/module.dart';
 import 'model/question.dart';
 import 'model/quiz.dart';
 import 'services/isar_service.dart';
+
+var logger = Logger(
+  printer: PrettyPrinter(),
+);
+
 
 class QuestionListScreen extends StatelessWidget {
   const QuestionListScreen(
@@ -51,11 +57,11 @@ class QuestionListScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(5.0),
                             child: ElevatedButton(
                               onPressed: () {
-                                print("Showing questions screen");
+                                logger.d("Showing questions screen");
                                 showModalBottomSheet<void>(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return Container(
+                                    return SizedBox(
                                       height: 200,
                                       child: Center(
                                         child: Column(
@@ -70,12 +76,12 @@ class QuestionListScreen extends StatelessWidget {
                                     );
                                   },
                                 );
-                                print(question.answer);
+                                logger.d(question.answer);
                               },
                               style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.all(25),
+                                padding: const EdgeInsets.all(25),
                               
-                                backgroundColor: Color.fromARGB(255, 79, 79, 79),
+                                backgroundColor: const Color.fromARGB(255, 79, 79, 79),
                               ),
                               child: Text(question.question),
                             ),

@@ -50,8 +50,8 @@ class QuizListScreen extends StatelessWidget {
                           onPressed: () {
                             QuestionListScreen.navigate(
                                 context, quiz, module, service);
-                            print("Going to Quiz details screen");
-                            print(quiz.title);
+                            logger.d("Going to Quiz details screen");
+                            logger.d(quiz.title);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:

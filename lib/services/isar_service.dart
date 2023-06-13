@@ -2,7 +2,6 @@ import 'package:isar/isar.dart';
 import '../model/module.dart';
 import '../model/question.dart';
 import '../model/quiz.dart';
-import '../model/test.dart';
 
 class IsarService {
   late Future<Isar> db;
@@ -69,7 +68,7 @@ class IsarService {
 
   Stream<List<Question>> listenToQuestions(Quiz quiz) async* {
     final isar = await db;
-    yield* isar.questions
+    yield* isar.questions 
         .filter()
         .quiz((q) => q.idEqualTo(quiz.id))
         .watch(fireImmediately: true);

@@ -4,10 +4,15 @@ import 'module_modal.dart';
 import 'model/module.dart';
 import 'quiz_list_screen.dart';
 import 'services/isar_service.dart';
-
+import 'package:logger/logger.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+
+var logger = Logger(
+  printer: PrettyPrinter(),
+);
 
 void main() {
   runApp(const MyApp());
@@ -44,24 +49,27 @@ class ModuleScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () async {
-              print("/////////////");
+              logger.d("////////////");
               await service
                   .exportAllToJSON()
-                  .then((value) => print("MODULES JSON: $value"));
+                  .then((value) => logger.d("MODULES JSON: $value"));
               await service
                   .exportAlQuizlToJSON()
-                  .then((value) => print("QUIZS JSON: $value"));
+                  .then((value) => logger.d("QUIZS JSON: $value"));
               await service
                   .exportAllQuestionsToJSON()
-                  .then((value) => print("QUESTIONS JSON: $value"));
-              print("////////");
+                  .then((value) => logger.d("QUESTIONS JSON: $value"));
+              logger.d("////////");
 
-              final filename = "test";
+              const filename = "test";
               final file = File(
                   '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-                service.exportAllQuestionsToJSON().then((value) => file.writeAsString('$value'));
-            print("Location: $file");
-            print("File contents:" + file.readAsStringSync());
+              service
+                  .exportAllQuestionsToJSON()
+                  .then((value) => file.writeAsString('$value'));
+              logger.d("Location: $file");
+              logger.d("File contents:${file.readAsStringSync()}");
+              await Share.shareXFiles([XFile('$file')]);
             },
           )
         ],
