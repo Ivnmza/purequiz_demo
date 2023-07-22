@@ -62,8 +62,7 @@ class ModuleScreen extends StatelessWidget {
               logger.d("////////");
 
               const filename = "test";
-              final file = File(
-                  '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+              final file = File('${(await getApplicationDocumentsDirectory()).path}/$filename.json');
               service
                   .exportAllQuestionsToJSON()
                   .then((value) => file.writeAsString('$value'));
