@@ -56,7 +56,7 @@ class ModuleScreen extends StatelessWidget {
                   .then((value) => file.writeAsString('$value'));
               final exportedFile = file.readAsBytesSync();
               DocumentFileSavePlus().saveMultipleFiles(
-                dataList: [ exportedFile],
+                dataList: [exportedFile],
                 fileNameList: ["exportedPureQuiz.txt"],
                 mimeTypeList: ["text/plain"],
               );
