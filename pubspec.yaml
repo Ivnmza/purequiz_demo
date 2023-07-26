@@ -19,6 +19,8 @@ dependencies:
   path_provider: 2.0.15
   share_plus: ^6.3.0
   logger: ^1.4.0
+  document_file_save_plus: ^2.0.0
+
 
 
 dev_dependencies:

@@ -1,4 +1,6 @@
 PODS:
+  - document_file_save_plus (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - isar_flutter_libs (1.0.0):
     - Flutter
@@ -9,12 +11,15 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - document_file_save_plus (from `.symlinks/plugins/document_file_save_plus/ios`)
   - Flutter (from `Flutter`)
   - isar_flutter_libs (from `.symlinks/plugins/isar_flutter_libs/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
 
 EXTERNAL SOURCES:
+  document_file_save_plus:
+    :path: ".symlinks/plugins/document_file_save_plus/ios"
   Flutter:
     :path: Flutter
   isar_flutter_libs:
@@ -25,6 +30,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/share_plus/ios"
 
 SPEC CHECKSUMS:
+  document_file_save_plus: 913d440d8b611ae19add4522ed578e3ed1483a2f
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   isar_flutter_libs: b69f437aeab9c521821c3f376198c4371fa21073
   path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
