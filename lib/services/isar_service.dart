@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:document_file_save_plus/document_file_save_plus.dart';
 import 'package:isar/isar.dart';
-import 'package:purequiz_demo/main.dart';
 import '../model/module.dart';
 import '../model/question.dart';
 import '../model/quiz.dart';
