@@ -1,20 +1,10 @@
-import 'dart:convert';
-import 'dart:math';
-import 'dart:typed_data';
 
-import 'package:document_file_save_plus/document_file_save_plus.dart';
 import 'package:flutter/material.dart';
-
-import 'model/question.dart';
 import 'module_modal.dart';
 import 'model/module.dart';
 import 'quiz_list_screen.dart';
 import 'services/isar_service.dart';
 import 'package:logger/logger.dart';
-import 'dart:io';
-import 'dart:async';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 
 var logger = Logger(
   printer: PrettyPrinter(),
@@ -47,17 +37,21 @@ class ModuleScreen extends StatelessWidget {
   final service = IsarService();
 
   void _saveFile() {
-    // DocumentFileSavePlus().saveFile(data, fileName, "text/plain");
-    // save multiple files (case that file have same name). system will automatically append number to filename.
-    // DocumentFileSave.saveMultipleFiles([htmlBytes, textBytes], ["file.txt", "file.txt"], ["text/html", "text/plain"]);
-
-    // save single file
-    //DocumentFileSavePlus().saveFile(textBytes1, "my test file", "text/plain");
-  /// Helper method to convert a [User] to an [AppUser]
-  //List<Map<String,dynamic>>? _convertUser(List<Map<String,dynamic>>? listofquestions) =>
-     // listofquestions != null ? Question(listofquestions) : null;
-
+    service.exportAllQuestionsToJSONFile();
   }
+
+  void _logAll() async {
+    await service
+        .exportAllToJSON()
+        .then((value) => logger.d("MODULES JSON: $value"));
+    await service
+        .exportAlQuizlToJSON()
+        .then((value) => logger.d("QUIZS JSON: $value"));
+    await service
+        .exportAllQuestionsToJSON()
+        .then((value) => logger.d("QUESTIONS JSON: $value"));
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,48 +62,9 @@ class ModuleScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () async {
-/*
-              var allQuestions = await service.exportAllQuestionsToJSON();
-              var  allQuestionsMap = allQuestions.map((e){
-                return {
-                  "question":e,
-                  "answer":e[0],
-                  "id":e[1],
-                  "moduleString":e[2],
-                  "quizString":e[4]
-                };
-              }).toList();
-              String stringQuestions = json.encode(allQuestionsMap);
-              logger.d("AllQuestions Json: $stringQuestions");
-              */
-              await service
-                  .exportAllToJSON()
-                  .then((value) => logger.d("MODULES JSON: $value"));
-              await service
-                  .exportAlQuizlToJSON()
-                  .then((value) => logger.d("QUIZS JSON: $value"));
-              await service
-                  .exportAllQuestionsToJSON()
-                  .then((value) => logger.d("QUESTIONS JSON: $value"));
-
-              const filename = "test";
-              final file = File(
-                  '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-              service
-                  .exportAllQuestionsToJSON()
-                  .then((value) => file.writeAsString('$value'));
-              logger.d("Location: $file");
-              logger.d("File contents:${file.readAsStringSync()}");
-              final exportedFile = file.readAsBytesSync();
-              //service.exportAllQuestionsToJSON().then((value) => DocumentFileSavePlus().saveFile(Uint8List.fromList(utf8.encode(value.toString())),  DateTime.now().toString(), "text/plain"));
-              //await Share.shareXFiles([XFile('$file')]);
-              // DocumentFileSavePlus().saveFile(Uint8List.fromList(utf8.encode(service.exportAllQuestionsToJSON().toString())), DateTime.now().toString(), "text/plain");
-
-              DocumentFileSavePlus().saveMultipleFiles(
-                dataList: [ exportedFile],
-                fileNameList: ["exportedPureQuiz.txt"],
-                mimeTypeList: ["text/plain"],
-              );
+              logger.d("export button pressed");
+              _logAll();
+              _saveFile();
             },
           )
         ],
