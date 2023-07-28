@@ -39,10 +39,11 @@ class QuestionListScreen extends StatelessWidget {
         bottomNavigationBar: ElevatedButton(
           onPressed: () {
             showModalBottomSheet(
+              isScrollControlled: true,
                 context: context,
                 builder: (context) => AddQuestionModal(service, quiz, module));
           },
-          child: const Text("Add Question"),
+          child: const Text("Add Question:"),
         ),
         body: Column(children: [
           Expanded(

@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:purequiz_demo/constants/constants.dart';
 import 'module_modal.dart';
 import 'model/module.dart';
 import 'quiz_list_screen.dart';
@@ -22,10 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Purequiz Demo',
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      theme: kThemeData,
       debugShowCheckedModeBanner: false,
       home: ModuleScreen(),
     );
@@ -34,24 +31,6 @@ class MyApp extends StatelessWidget {
 
 class ModuleScreen extends StatelessWidget {
   ModuleScreen({super.key});
-  final service = IsarService();
-
-  void _saveFile() {
-    service.exportAllQuestionsToJSONFile();
-  }
-
-  void _logAll() async {
-    await service
-        .exportAllToJSON()
-        .then((value) => logger.d("MODULES JSON: $value"));
-    await service
-        .exportAlQuizlToJSON()
-        .then((value) => logger.d("QUIZS JSON: $value"));
-    await service
-        .exportAllQuestionsToJSON()
-        .then((value) => logger.d("QUESTIONS JSON: $value"));
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -62,29 +41,19 @@ class ModuleScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () async {
-              logger.d("export button pressed");
               _logAll();
               _saveFile();
             },
           )
         ],
       ),
-      bottomNavigationBar: ElevatedButton(
-        onPressed: () {
-          showModalBottomSheet(
-              context: context,
-              builder: (context) {
-                return ModuleModal(service);
-              });
-        },
-        child: const Text("Add Module"),
-      ),
+      bottomNavigationBar: _addTopicBottomSheet(context),
       body: Column(children: [
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: StreamBuilder<List<Module>>(
-              stream: service.listenToModules(),
+              stream: db.listenToModules(),
               builder: (context, snapshot) => GridView.count(
                 crossAxisCount: 2,
                 crossAxisSpacing: 8,
@@ -92,19 +61,7 @@ class ModuleScreen extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 children: snapshot.hasData
                     ? snapshot.data!.map((module) {
-                        return ElevatedButton(
-                          onPressed: () {
-                            QuizListScreen.navigate(context, module, service);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 89, 80, 253),
-                            padding: const EdgeInsets.all(5.0),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                          ),
-                          child: Text(module.moduleTitle),
-                        );
+                        return _topicButton(context, module, db);
                       }).toList()
                     : [],
               ),
@@ -114,7 +71,67 @@ class ModuleScreen extends StatelessWidget {
       ]),
     );
   }
+
+  Widget _addTopicText() {
+    return const Text(
+      "Add Topic",
+      style: TextStyle(fontSize: 25),
+    );
+  }
+
+  Widget _topicButton(context, module, db) {
+    return ElevatedButton(
+      onPressed: () {
+        QuizListScreen.navigate(context, module, db);
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color.fromARGB(255, 89, 80, 253),
+        padding: const EdgeInsets.all(15.0),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      ),
+      child: Text(
+        module.moduleTitle,
+        style: const TextStyle(fontSize: 20),
+      ),
+    );
+  }
+
+  final db = IsarService();
+
+  void _saveFile() {
+    db.exportAllQuestionsToJSONFile();
+  }
+
+  void _logAll() async {
+    await db
+        .exportAllToJSON()
+        .then((value) => logger.d("MODULES JSON: $value"));
+    await db
+        .exportAlQuizlToJSON()
+        .then((value) => logger.d("QUIZS JSON: $value"));
+    await db
+        .exportAllQuestionsToJSON()
+        .then((value) => logger.d("QUESTIONS JSON: $value"));
+  }
+
+  Widget _addTopicBottomSheet(context) {
+    return SizedBox(
+      height: 105,
+      child: ElevatedButton(
+          onPressed: () {
+            showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (context) {
+                  return ModuleModal(db);
+                });
+          },
+          child: _addTopicText()),
+    );
+  }
 }
+
 
 // 0: First imported package and checked main dart file to see  if any initialization code is necessary(as  it  was for hive)
   //:  

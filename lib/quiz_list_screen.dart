@@ -11,7 +11,6 @@ class QuizListScreen extends StatelessWidget {
       : super(key: key);
   final Module module;
   final IsarService service;
-
   static void navigate(context, Module module, IsarService service) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return QuizListScreen(module: module, service: service);
@@ -26,8 +25,8 @@ class QuizListScreen extends StatelessWidget {
         onPressed: () {
           showModalBottomSheet(
               context: context,
+              isScrollControlled: true,
               builder: (context) {
-                // build QuizModal
                 return AddQuizModal(service, module);
               });
         },
@@ -50,8 +49,7 @@ class QuizListScreen extends StatelessWidget {
                           onPressed: () {
                             QuestionListScreen.navigate(
                                 context, quiz, module, service);
-                            logger.d("Going to Quiz screen: "+ quiz.title);
-                            logger.d(quiz.title);
+                            logger.d("Going to Quiz screen: " + quiz.title);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
