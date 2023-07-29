@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:purequiz_demo/common_widgets/common_widgets.dart';
 import 'package:purequiz_demo/constants/constants.dart';
+import 'constants/app_sizes.dart';
 import 'module_modal.dart';
 import 'model/module.dart';
 import 'quiz_list_screen.dart';
@@ -61,7 +63,7 @@ class ModuleScreen extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 children: snapshot.hasData
                     ? snapshot.data!.map((module) {
-                        return _topicButton(context, module, db);
+                        return TopicButton(module: module, db: db);
                       }).toList()
                     : [],
               ),
@@ -72,6 +74,10 @@ class ModuleScreen extends StatelessWidget {
     );
   }
 
+  /////////////
+  //////////// WIDGETS
+  ///////////
+
   Widget _addTopicText() {
     return const Text(
       "Add Topic",
@@ -79,23 +85,6 @@ class ModuleScreen extends StatelessWidget {
     );
   }
 
-  Widget _topicButton(context, module, db) {
-    return ElevatedButton(
-      onPressed: () {
-        QuizListScreen.navigate(context, module, db);
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 89, 80, 253),
-        padding: const EdgeInsets.all(15.0),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      ),
-      child: Text(
-        module.moduleTitle,
-        style: const TextStyle(fontSize: 20),
-      ),
-    );
-  }
 
   final db = IsarService();
 
