@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:document_file_save_plus/document_file_save_plus.dart';
@@ -14,6 +15,12 @@ class IsarService {
   IsarService() {
     db = openDB();
   }
+
+  Future<dynamic> openDBFromJsonn(File jsonFile) async {
+    final isar = await db;
+
+  }
+
 // easy to  change
   Future<void> saveModule(Module newModule) async {
     final isar = await db;

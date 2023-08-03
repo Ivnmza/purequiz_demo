@@ -32,16 +32,14 @@ class ModuleScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: kAppTitleText,
-          actions: const [
-            ExportJsonFileButton()
-          ],
+          actions: const [ExportJsonFileButton(), PickDocument()],
         ),
         bottomNavigationBar: const AddTopicButton(),
         body: const ModuleGridView());
   }
 }
-
 
 
 

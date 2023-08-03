@@ -20,6 +20,7 @@ dependencies:
   share_plus: ^6.3.0
   logger: ^1.4.0
   document_file_save_plus: ^2.0.0
+  flutter_document_picker: ^5.2.3
 
 
 

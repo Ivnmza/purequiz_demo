@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../add_question_modal.dart';
@@ -12,6 +14,7 @@ import '../module_modal.dart';
 import '../question_list_screen.dart';
 import '../quiz_grid_screen.dart';
 import '../services/isar_service.dart';
+import 'package:flutter_document_picker/flutter_document_picker.dart';
 
 class GoToTopicButton extends StatelessWidget {
   const GoToTopicButton({super.key, required this.module, required this.db});
@@ -119,9 +122,10 @@ class QuestionInstance extends StatelessWidget {
 }
 
 class ShowAnswerButton extends StatelessWidget {
-  const ShowAnswerButton({super.key, required  this.context, required this.question});
-final BuildContext context;
-final Question  question;
+  const ShowAnswerButton(
+      {super.key, required this.context, required this.question});
+  final BuildContext context;
+  final Question question;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -222,6 +226,27 @@ class ExportJsonFileButton extends StatelessWidget {
             .exportAllQuestionsToJSON()
             .then((value) => logger.d("QUESTIONS JSON: $value"));
         db.exportAllQuestionsToJSONFile();
+      },
+    );
+  }
+}
+
+class PickDocument extends StatelessWidget {
+  const PickDocument({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.dock),
+      onPressed: () async {
+        // create a isar DB from this JSON
+        final File myFile;
+        final String? path = await FlutterDocumentPicker.openDocument();
+        final String myFileContents;
+        myFile = File(path!);
+        logger.d("Path picked: $path");
+        myFileContents = myFile.readAsStringSync();
+        logger.d("Contents: $myFileContents");
       },
     );
   }
