@@ -4,9 +4,9 @@ import '/model/module.dart';
 import '/services/isar_service.dart';
 
 class AddQuizModal extends StatefulWidget {
-  final IsarService service;
+  final IsarService db;
   final Module module;
-  const AddQuizModal(this.service, this.module, {Key? key}) : super(key: key);
+  const AddQuizModal(this.db, this.module, {Key? key}) : super(key: key);
 
   @override
   State<AddQuizModal> createState() => _AddQuizModalState();
@@ -18,7 +18,7 @@ class _AddQuizModalState extends State<AddQuizModal> {
 
   void _enterQuiz() {
     if (_formKey.currentState!.validate()) {
-      widget.service.saveQuiz(Quiz()
+      widget.db.saveQuiz(Quiz()
         ..title = _textController.text
         ..containingModule.value = widget.module
         ..containingModuleString = widget.module.moduleTitle);
@@ -31,43 +31,45 @@ class _AddQuizModalState extends State<AddQuizModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(children: [
-      Padding(
-        padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-            bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+    return Wrap(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+              bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
                 const SizedBox(height: 15),
-              Text("Enter Quiz",
-                  style: Theme.of(context).textTheme.headlineSmall),
-              TextFormField(
-                controller: _textController,
-                autofocus: true,
-                onFieldSubmitted: (value) {
-                  _enterQuiz();
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Quiz title not allowed to be empty";
-                  }
-                  return null;
-                },
-              ),
-              ElevatedButton(
-                  onPressed: () {
+                Text("Enter Quiz",
+                    style: Theme.of(context).textTheme.headlineSmall),
+                TextFormField(
+                  controller: _textController,
+                  autofocus: true,
+                  onFieldSubmitted: (value) {
                     _enterQuiz();
                   },
-                  child: const Text("Add new Quiz"))
-            ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Quiz title not allowed to be empty";
+                    }
+                    return null;
+                  },
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      _enterQuiz();
+                    },
+                    child: const Text("Add new Quiz"))
+              ],
+            ),
           ),
-        ),
-      )
-    ]);
+        )
+      ],
+    );
   }
 }

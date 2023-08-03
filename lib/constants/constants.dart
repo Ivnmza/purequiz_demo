@@ -8,3 +8,5 @@ final kThemeData = ThemeData(
 Color kPurple = const Color.fromARGB(255, 89, 80, 253);
 RoundedRectangleBorder kTopicShape =
     RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0));
+
+Text kAppTitleText = const Text("PureQuiz");

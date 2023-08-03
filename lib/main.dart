@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:purequiz_demo/common_widgets/common_widgets.dart';
 import 'package:purequiz_demo/constants/constants.dart';
-import 'constants/app_sizes.dart';
-import 'module_modal.dart';
-import 'model/module.dart';
-import 'quiz_list_screen.dart';
-import 'services/isar_service.dart';
 import 'package:logger/logger.dart';
 
 var logger = Logger(
@@ -19,107 +14,35 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Purequiz Demo',
       theme: kThemeData,
       debugShowCheckedModeBanner: false,
-      home: ModuleScreen(),
+      home: const ModuleScreen(),
     );
   }
 }
 
 class ModuleScreen extends StatelessWidget {
-  ModuleScreen({super.key});
+  const ModuleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("PureQuiz"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () async {
-              _logAll();
-              _saveFile();
-            },
-          )
-        ],
-      ),
-      bottomNavigationBar: _addTopicBottomSheet(context),
-      body: Column(children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: StreamBuilder<List<Module>>(
-              stream: db.listenToModules(),
-              builder: (context, snapshot) => GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                scrollDirection: Axis.vertical,
-                children: snapshot.hasData
-                    ? snapshot.data!.map((module) {
-                        return TopicButton(module: module, db: db);
-                      }).toList()
-                    : [],
-              ),
-            ),
-          ),
+        appBar: AppBar(
+          title: kAppTitleText,
+          actions: const [
+            ExportJsonFileButton()
+          ],
         ),
-      ]),
-    );
-  }
-
-  /////////////
-  //////////// WIDGETS
-  ///////////
-
-  Widget _addTopicText() {
-    return const Text(
-      "Add Topic",
-      style: TextStyle(fontSize: 25),
-    );
-  }
-
-
-  final db = IsarService();
-
-  void _saveFile() {
-    db.exportAllQuestionsToJSONFile();
-  }
-
-  void _logAll() async {
-    await db
-        .exportAllToJSON()
-        .then((value) => logger.d("MODULES JSON: $value"));
-    await db
-        .exportAlQuizlToJSON()
-        .then((value) => logger.d("QUIZS JSON: $value"));
-    await db
-        .exportAllQuestionsToJSON()
-        .then((value) => logger.d("QUESTIONS JSON: $value"));
-  }
-
-  Widget _addTopicBottomSheet(context) {
-    return SizedBox(
-      height: 105,
-      child: ElevatedButton(
-          onPressed: () {
-            showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                builder: (context) {
-                  return ModuleModal(db);
-                });
-          },
-          child: _addTopicText()),
-    );
+        bottomNavigationBar: const AddTopicButton(),
+        body: const ModuleGridView());
   }
 }
+
+
 
 
 // 0: First imported package and checked main dart file to see  if any initialization code is necessary(as  it  was for hive)

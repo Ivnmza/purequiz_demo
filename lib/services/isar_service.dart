@@ -6,6 +6,8 @@ import '../model/module.dart';
 import '../model/question.dart';
 import '../model/quiz.dart';
 
+ final db = IsarService();
+
 class IsarService {
   late Future<Isar> db;
 
