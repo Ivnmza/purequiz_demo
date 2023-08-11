@@ -16,6 +16,7 @@ import '../quiz_grid_screen.dart';
 import '../services/isar_service.dart';
 import 'package:flutter_document_picker/flutter_document_picker.dart';
 
+
 class GoToModuleButton extends StatelessWidget {
   const GoToModuleButton({super.key, required this.module, required this.db});
   final IsarService db;
@@ -24,6 +25,7 @@ class GoToModuleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () => QuizListScreen.navigate(context, module, db),
+      onLongPress: ()=> {},
       style: ElevatedButton.styleFrom(
           backgroundColor: kPurple,
           padding: const EdgeInsets.all(Sizes.p16),
@@ -289,7 +291,7 @@ class ShowJsonImportModal extends StatelessWidget {
               child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-              onPressed: () => {db.clearThenAddQuestionsFromJson(file)},
+              onPressed: () => {db.clearImportJson(file)},
               child: const Text("Clear and Import"),
             ),
           )),
