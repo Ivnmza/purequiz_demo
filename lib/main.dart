@@ -36,7 +36,7 @@ class ModuleScreen extends StatelessWidget {
           title: kAppTitleText,
           actions: const [ExportJsonFileButton(), PickDocument()],
         ),
-        bottomNavigationBar: const AddTopicButton(),
+        bottomNavigationBar: const AddModuleButton(),
         body: const ModuleGridView());
   }
 }

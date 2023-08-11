@@ -16,8 +16,8 @@ import '../quiz_grid_screen.dart';
 import '../services/isar_service.dart';
 import 'package:flutter_document_picker/flutter_document_picker.dart';
 
-class GoToTopicButton extends StatelessWidget {
-  const GoToTopicButton({super.key, required this.module, required this.db});
+class GoToModuleButton extends StatelessWidget {
+  const GoToModuleButton({super.key, required this.module, required this.db});
   final IsarService db;
   final Module module;
   @override
@@ -36,8 +36,8 @@ class GoToTopicButton extends StatelessWidget {
   }
 }
 
-class AddTopicButton extends StatelessWidget {
-  const AddTopicButton({super.key});
+class AddModuleButton extends StatelessWidget {
+  const AddModuleButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +62,9 @@ class AddTopicButton extends StatelessWidget {
   }
 }
 
+//////////////////////////////////////
+////////////////////////////////
+
 class GoToQuizButton extends StatelessWidget {
   const GoToQuizButton({super.key, required this.quiz, required this.module});
   final Quiz quiz;
@@ -72,7 +75,7 @@ class GoToQuizButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: () {
         QuestionListScreen.navigate(context, quiz, module, db);
-        logger.d("Going to Quiz screen: " + quiz.title);
+        logger.d("Going to Quiz screen: ${quiz.title}");
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color.fromARGB(255, 89, 80, 253),
@@ -111,6 +114,9 @@ class AddQuizButton extends StatelessWidget {
     );
   }
 }
+//////
+///////
+/////////////////
 
 class QuestionInstance extends StatelessWidget {
   const QuestionInstance({super.key, required this.question});
@@ -141,15 +147,6 @@ class ShowAnswerButton extends StatelessWidget {
         child: Text(question.question),
       ),
     );
-  }
-}
-
-class QuestionInstanceButton extends StatelessWidget {
-  const QuestionInstanceButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }
 
@@ -220,34 +217,94 @@ class ExportJsonFileButton extends StatelessWidget {
             .exportAllToJSON()
             .then((value) => logger.d("MODULES JSON: $value"));
         await db
-            .exportAlQuizlToJSON()
+            .exportAllQuizlToJSON()
             .then((value) => logger.d("QUIZS JSON: $value"));
         await db
             .exportAllQuestionsToJSON()
             .then((value) => logger.d("QUESTIONS JSON: $value"));
         db.exportAllQuestionsToJSONFile();
+        //db.exportAllModulesToJsonFile();
       },
     );
   }
 }
 
-class PickDocument extends StatelessWidget {
+class PickDocument extends StatefulWidget {
   const PickDocument({super.key});
 
+  @override
+  State<PickDocument> createState() => _PickDocumentState();
+}
+
+class _PickDocumentState extends State<PickDocument> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.dock),
       onPressed: () async {
-        // create a isar DB from this JSON
+        // importJson.1 create a isar DB from this JSON
         final File myFile;
         final String? path = await FlutterDocumentPicker.openDocument();
-        final String myFileContents;
-        myFile = File(path!);
-        logger.d("Path picked: $path");
-        myFileContents = myFile.readAsStringSync();
-        logger.d("Contents: $myFileContents");
+        if (path != null) {
+          myFile = File(path);
+          logger.d("Path picked: $path");
+          // importJson.2  insert the contents into a method that will process the JSON
+          if (context.mounted) {
+            _showFileImportModalSheet(context, myFile);
+          }
+        } else {
+          logger.d("No file picked");
+        }
       },
+    );
+  }
+}
+
+void _showFileImportModalSheet(context, File file) async {
+  return showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    builder: (BuildContext context) {
+      return ShowJsonImportModal(file: file);
+    },
+  );
+}
+
+class ShowJsonImportModal extends StatelessWidget {
+  const ShowJsonImportModal({super.key, required this.file});
+  final File file;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          const SizedBox(
+            height: 90,
+          ),
+          Expanded(
+              child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () => {db.clearThenAddQuestionsFromJson(file)},
+              child: const Text("Clear and Import"),
+            ),
+          )),
+          Expanded(
+              child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+                onPressed: () => {db.addQuestionsFromJson4(file)},
+                child: const Text("Add To Current")),
+          )),
+          const SizedBox(
+            height: 100,
+          )
+        ],
+      ),
     );
   }
 }
@@ -274,7 +331,7 @@ class ModuleGridView extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 children: snapshot.hasData
                     ? snapshot.data!.map((module) {
-                        return GoToTopicButton(module: module, db: db);
+                        return GoToModuleButton(module: module, db: db);
                       }).toList()
                     : [],
               ),

@@ -15,4 +15,10 @@ class Question{
   
   final quiz = IsarLink<Quiz>();
   final module = IsarLink<Module>();
+
+//  Question(this.question,this.answer, this.quizString,this.moduleString, this.id);
+
+  //factory Question.fromJson(dynamic json) {
+    //return Question(json['question'] as String, json['answer'] as String, json['quizString'] as String, json['moduleString'] as String, json[]);
+  //}
 }
