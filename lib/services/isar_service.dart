@@ -187,6 +187,98 @@ class IsarService {
     });
   }
 
+
+
+    clearImportJson(File jsonFile) async {
+    final isar = await database;
+    final String jsonContents = jsonFile.readAsStringSync();
+    final dynamic parsedJSON = jsonDecode(jsonContents);
+    if (parsedJSON == null) {
+    } else {
+      logger.d("Json being imported: $parsedJSON");
+      List<Map<String, dynamic>> info = List.from(parsedJSON);
+
+      for (var element in info) {
+        var currentQuestionModule =
+            await getSingleModule(element['moduleString']);
+        var currentQuestionQuiz = await getSingleQuiz(element['quizString']);
+        var currentQuestionInstance =
+            await getSingleQuestion(element['question']);
+        logger.d("isModulePresent?: $currentQuestionModule");
+        if (currentQuestionModule == null) {
+          logger.d("Module not present.. writing to db");
+
+          Module newModule = Module();
+          newModule.moduleTitle = element['moduleString'];
+          Quiz newQuiz = Quiz();
+          newQuiz.title = element['quizString'];
+          newQuiz.containingModule.value = newModule;
+          newQuiz.containingModuleString = element['quizString'];
+          Question newQuestion = Question();
+          newQuestion.question = element['question'];
+          newQuestion.answer = element['answer'];
+          newQuestion.quizString = element['quizString'];
+          newQuestion.quiz.value = newQuiz;
+          newQuestion.moduleString = element['moduleString'];
+          newQuestion.module.value = newModule;
+
+          isar.writeTxnSync<int>(() => isar.modules.putSync(newModule));
+
+          if (currentQuestionQuiz == null) {
+            logger.d("Quiz not present.. writing quiz to db ");
+            isar.writeTxnSync<int>(() => isar.quizs.putSync(newQuiz));
+
+            if (currentQuestionInstance == null) {
+              isar.writeTxnSync<int>(() => isar.questions.putSync(newQuestion));
+            }
+          } else {
+            logger.d("Quiz present. ");
+            Question newQuestion = Question();
+            newQuestion.question = element['question'];
+            newQuestion.answer = element['answer'];
+            newQuestion.quizString = element['quizString'];
+            newQuestion.quiz.value = currentQuestionQuiz;
+            newQuestion.moduleString = element['moduleString'];
+            newQuestion.module.value = currentQuestionModule;
+            
+            if (currentQuestionInstance == null) {
+              isar.writeTxnSync<int>(() => isar.questions.putSync(newQuestion));
+            }
+          }
+        } else {
+          logger.d("Module present.. Searching for Quiz");
+
+          Quiz newQuiz = Quiz();
+          newQuiz.title = element['quizString'];
+          newQuiz.containingModule.value = currentQuestionModule;
+          newQuiz.containingModuleString = element['quizString'];
+          Question newQuestion = Question();
+          newQuestion.question = element['question'];
+          newQuestion.answer = element['answer'];
+          newQuestion.quizString = element['quizString'];
+          newQuestion.quiz.value = newQuiz;
+          newQuestion.moduleString = element['moduleString'];
+          newQuestion.module.value = currentQuestionModule;
+
+          if (currentQuestionQuiz == null) {
+            logger.d("Module Present.Quiz not present.. writing quiz to db ");
+            isar.writeTxnSync<int>(() => isar.quizs.putSync(newQuiz));
+          } else {
+            Question newQuestion = Question();
+            newQuestion.question = element['question'];
+            newQuestion.answer = element['answer'];
+            newQuestion.quizString = element['quizString'];
+            newQuestion.quiz.value = currentQuestionQuiz;
+            newQuestion.moduleString = element['moduleString'];
+            newQuestion.module.value = currentQuestionModule;
+           if (currentQuestionInstance == null) {
+              isar.writeTxnSync<int>(() => isar.questions.putSync(newQuestion));
+            }          }
+        }
+      }
+    }
+  }
+
   clearThenAddQuestionsFromJson(File jsonFile) async {
     final isar = await database;
     final String jsonContents = jsonFile.readAsStringSync();

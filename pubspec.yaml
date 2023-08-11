@@ -21,7 +21,9 @@ dependencies:
   logger: ^1.4.0
   document_file_save_plus: ^2.0.0
   flutter_document_picker: ^5.2.3
-  
+  animations: ^2.0.7
+
+
 
 
 dev_dependencies:

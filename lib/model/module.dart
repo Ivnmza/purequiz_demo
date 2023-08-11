@@ -12,6 +12,4 @@ class Module{
 
   @Backlink(to: "containingModule")
   final quizzes = IsarLinks<Quiz>();
-
-  
 }
