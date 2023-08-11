@@ -15,5 +15,5 @@ import 'question.dart';
   @Backlink(to: "quiz")
   final questions = IsarLinks<Question>();
 
-  late IsarLink containingModule = IsarLink<Module>();
+   IsarLink containingModule = IsarLink<Module>();
  }

@@ -75,7 +75,6 @@ class GoToQuizButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: () {
         QuestionListScreen.navigate(context, quiz, module, db);
-        logger.d("Going to Quiz screen: ${quiz.title}");
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color.fromARGB(255, 89, 80, 253),
@@ -203,7 +202,8 @@ class AddQuestionButton extends StatelessWidget {
 }
 
 ///////////////////////////////
-/////////////////////////////
+///////////////////////////////
+////////////////////////////
 
 class ExportJsonFileButton extends StatelessWidget {
   const ExportJsonFileButton({super.key});
@@ -297,7 +297,7 @@ class ShowJsonImportModal extends StatelessWidget {
               child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-                onPressed: () => {db.addQuestionsFromJson4(file)},
+                onPressed: () => {db.importJson(file)},
                 child: const Text("Add To Current")),
           )),
           const SizedBox(
