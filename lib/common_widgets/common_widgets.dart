@@ -3,118 +3,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../add_question_modal.dart';
-import '../add_quiz_modal.dart';
-import '../constants/app_sizes.dart';
-import '../constants/constants.dart';
 import '../main.dart';
 import '../model/module.dart';
 import '../model/question.dart';
 import '../model/quiz.dart';
-import '../module_modal.dart';
-import '../question_list_screen.dart';
-import '../quiz_grid_screen.dart';
 import '../services/isar_service.dart';
 import 'package:flutter_document_picker/flutter_document_picker.dart';
 
 
-class GoToModuleButton extends StatelessWidget {
-  const GoToModuleButton({super.key, required this.module, required this.db});
-  final IsarService db;
-  final Module module;
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () => QuizListScreen.navigate(context, module, db),
-      onLongPress: ()=> {},
-      style: ElevatedButton.styleFrom(
-          backgroundColor: kPurple,
-          padding: const EdgeInsets.all(Sizes.p16),
-          shape: kTopicShape),
-      child: Text(
-        module.moduleTitle,
-        style: const TextStyle(fontSize: 20),
-      ),
-    );
-  }
-}
-
-class AddModuleButton extends StatelessWidget {
-  const AddModuleButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 105,
-      child: ElevatedButton(
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (context) {
-              return ModuleModal(db);
-            },
-          );
-        },
-        child: const Text(
-          "Add Topic",
-          style: TextStyle(fontSize: 25),
-        ),
-      ),
-    );
-  }
-}
 
 //////////////////////////////////////
 ////////////////////////////////
 
-class GoToQuizButton extends StatelessWidget {
-  const GoToQuizButton({super.key, required this.quiz, required this.module});
-  final Quiz quiz;
-  final Module module;
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        QuestionListScreen.navigate(context, quiz, module, db);
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 89, 80, 253),
-        padding: const EdgeInsets.all(5.0),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      ),
-      child: Text(quiz.title),
-    );
-  }
-}
-
-class AddQuizButton extends StatelessWidget {
-  const AddQuizButton({super.key, required this.module});
-  final Module module;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 105,
-      child: ElevatedButton(
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (context) {
-              return AddQuizModal(db, module);
-            },
-          );
-        },
-        child: const Text(
-          "Add Quiz",
-          style: TextStyle(fontSize: 25),
-        ),
-      ),
-    );
-  }
-}
 //////
 ///////
 /////////////////
@@ -314,67 +214,8 @@ class ShowJsonImportModal extends StatelessWidget {
 ////////////////////////////////////////////////////
 /////////////////////////////////////////////////
 
-class ModuleGridView extends StatelessWidget {
-  const ModuleGridView({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(Sizes.p8),
-            child: StreamBuilder<List<Module>>(
-              stream: db.listenToModules(),
-              builder: (context, snapshot) => GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                scrollDirection: Axis.vertical,
-                children: snapshot.hasData
-                    ? snapshot.data!.map((module) {
-                        return GoToModuleButton(module: module, db: db);
-                      }).toList()
-                    : [],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
 
-class QuizGridView extends StatelessWidget {
-  const QuizGridView({super.key, required this.module});
-  final Module module;
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: StreamBuilder<List<Quiz>>(
-              stream: db.listenToQuizzes(module),
-              builder: (context, snapshot) => GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                scrollDirection: Axis.vertical,
-                children: snapshot.hasData
-                    ? snapshot.data!.map((quiz) {
-                        return GoToQuizButton(quiz: quiz, module: module);
-                      }).toList()
-                    : [],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 class QuestionListView extends StatelessWidget {
   const QuestionListView({super.key, required this.quiz});

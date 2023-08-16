@@ -187,9 +187,7 @@ class IsarService {
     });
   }
 
-
-
-    clearImportJson(File jsonFile) async {
+  clearImportJson(File jsonFile) async {
     final isar = await database;
     final String jsonContents = jsonFile.readAsStringSync();
     final dynamic parsedJSON = jsonDecode(jsonContents);
@@ -240,7 +238,7 @@ class IsarService {
             newQuestion.quiz.value = currentQuestionQuiz;
             newQuestion.moduleString = element['moduleString'];
             newQuestion.module.value = currentQuestionModule;
-            
+
             if (currentQuestionInstance == null) {
               isar.writeTxnSync<int>(() => isar.questions.putSync(newQuestion));
             }
@@ -271,35 +269,12 @@ class IsarService {
             newQuestion.quiz.value = currentQuestionQuiz;
             newQuestion.moduleString = element['moduleString'];
             newQuestion.module.value = currentQuestionModule;
-           if (currentQuestionInstance == null) {
+            if (currentQuestionInstance == null) {
               isar.writeTxnSync<int>(() => isar.questions.putSync(newQuestion));
-            }          }
+            }
+          }
         }
       }
-    }
-  }
-
-  clearThenAddQuestionsFromJson(File jsonFile) async {
-    final isar = await database;
-    final String jsonContents = jsonFile.readAsStringSync();
-    final dynamic parsedJSON = jsonDecode(jsonContents);
-    if (parsedJSON == null) {
-    } else {
-      await isar.writeTxn(() async {
-        await isar.clear();
-      });
-      logger.d("Clearing then Adding...");
-      logger.d("$parsedJSON");
-
-      List<Map<String, dynamic>> info = List.from(parsedJSON);
-      await isar.writeTxn(() async {
-        await isar.questions.importJson(info);
-        for (var element in info) {
-          Module newModule = Module();
-          newModule.moduleTitle = element['moduleString'];
-          await isar.modules.put(newModule);
-        }
-      });
     }
   }
 
@@ -354,7 +329,7 @@ class IsarService {
             newQuestion.quiz.value = currentQuestionQuiz;
             newQuestion.moduleString = element['moduleString'];
             newQuestion.module.value = currentQuestionModule;
-            
+
             if (currentQuestionInstance == null) {
               isar.writeTxnSync<int>(() => isar.questions.putSync(newQuestion));
             }
@@ -385,14 +360,14 @@ class IsarService {
             newQuestion.quiz.value = currentQuestionQuiz;
             newQuestion.moduleString = element['moduleString'];
             newQuestion.module.value = currentQuestionModule;
-           if (currentQuestionInstance == null) {
+            if (currentQuestionInstance == null) {
               isar.writeTxnSync<int>(() => isar.questions.putSync(newQuestion));
-            }          }
+            }
+          }
         }
       }
     }
   }
-
 
   importJson2(File jsonFile) async {
     final isar = await database;
