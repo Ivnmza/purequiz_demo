@@ -37,11 +37,20 @@ class IsarService {
   ///
   ///
 
-  Future<void> deleteModule(String moduleTitle) async{
+  Future<void> deleteModule(String moduleTitle) async {
     final isar = await database;
-   // await isar.modules.filter().moduleTitleEqualTo(moduleTitle).deleteFirst();
-    isar.writeTxn(() => isar.modules.filter().moduleTitleEqualTo(moduleTitle).deleteFirst());
-
+    isar.writeTxn(() {
+      isar.questions.filter().moduleStringEqualTo(moduleTitle).deleteAll();
+      isar.quizs
+          .filter()
+          .containingModuleStringEqualTo(moduleTitle)
+          .deleteAll();
+      return isar.modules
+          .filter()
+          .moduleTitleEqualTo(moduleTitle)
+          .deleteFirst();
+    });
+    //isar.writeTxn(() => isar.modules.filter().moduleTitleEqualTo(moduleTitle).deleteFirst());
   }
 
 //////////////////////////////////////////
@@ -313,7 +322,7 @@ class IsarService {
           Quiz newQuiz = Quiz();
           newQuiz.title = element['quizString'];
           newQuiz.containingModule.value = newModule;
-          newQuiz.containingModuleString = element['quizString'];
+          newQuiz.containingModuleString = element['moduleString'];
           Question newQuestion = Question();
           newQuestion.question = element['question'];
           newQuestion.answer = element['answer'];

@@ -16,7 +16,7 @@ class _ModuleModalState extends State<ModuleModal> {
 
   void _addModule() {
     if (_formKey.currentState!.validate()) {
-      widget.db.saveModule(Module()..moduleTitle = _textController.text);
+      widget.db.saveModule(Module()..moduleTitle = _textController.text.trim());
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("New Module '${_textController.text}' saved in DB")));
       Navigator.pop(context);
@@ -47,7 +47,7 @@ class _ModuleModalState extends State<ModuleModal> {
                     _addModule();
                   },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (value == null || value.trim().isEmpty || value.isEmpty) {
                       return "Info not allowed to be empty";
                     }
                     return null;

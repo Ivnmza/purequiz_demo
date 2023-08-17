@@ -19,7 +19,7 @@ class _AddQuizModalState extends State<AddQuizModal> {
   void _enterQuiz() {
     if (_formKey.currentState!.validate()) {
       widget.db.saveQuiz(Quiz()
-        ..title = _textController.text
+        ..title = _textController.text.trim()
         ..containingModule.value = widget.module
         ..containingModuleString = widget.module.moduleTitle);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -54,7 +54,7 @@ class _AddQuizModalState extends State<AddQuizModal> {
                     _enterQuiz();
                   },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (value == null || value.trim().isEmpty || value.isEmpty) {
                       return "Quiz title not allowed to be empty";
                     }
                     return null;
@@ -117,7 +117,7 @@ class _AddQuizWidgetState extends State<AddQuizWidget> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 15),
-                Text("Enter Quiz",
+                Text("Enter Quiz:",
                     style: Theme.of(context).textTheme.headlineSmall),
                 TextFormField(
                   controller: _textController,
