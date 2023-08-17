@@ -50,7 +50,6 @@ class IsarService {
           .moduleTitleEqualTo(moduleTitle)
           .deleteFirst();
     });
-    //isar.writeTxn(() => isar.modules.filter().moduleTitleEqualTo(moduleTitle).deleteFirst());
   }
 
 //////////////////////////////////////////
