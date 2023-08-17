@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../model/module.dart';
+import '../services/isar_service.dart';
 import 'custom_rect_tween.dart';
 import 'hero_dialog_route.dart';
 
@@ -14,7 +16,6 @@ class AddTodoButton extends StatelessWidget {
   /// {@macro add_todo_button}
   const AddTodoButton({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,7 +23,7 @@ class AddTodoButton extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(HeroDialogRoute(builder: (context) {
-            return const AddTodoPopupCard();
+            return const Placeholder();
           }));
         },
         child: Hero(
@@ -53,33 +54,36 @@ const String _heroAddTodo = 'mod3';
 /// Popup card to add a new [Todo]. Should be used in conjuction with
 /// [HeroDialogRoute] to achieve the popup effect.
 ///
-/// Uses a [Hero] with tag [_heroAddTodo].
 /// {@endtemplate}
 class AddTodoPopupCard extends StatelessWidget {
   /// {@macro add_todo_popup_card}
-  const AddTodoPopupCard({super.key});
+  const AddTodoPopupCard({super.key, required this.module, required this.db});
+  final Module module;
+  final IsarService db;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.all(12.0),
         child: Hero(
-          tag: _heroAddTodo,
+          tag: module.moduleTitle,
           createRectTween: (begin, end) {
             return MaterialRectCenterArcTween(begin: begin, end: end);
           },
           child: Material(
-            color: const Color(0xFFef8354),
+            color: const Color.fromARGB(255, 89, 80, 253),
             elevation: 2,
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    Text(module.moduleTitle),
+                    Text(module.id.toString()),
                     const TextField(
                       decoration: InputDecoration(
                         hintText: 'New todo',
@@ -105,7 +109,11 @@ class AddTodoPopupCard extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: const Text('Add'),
+                      onLongPress: () {
+                        db.deleteModule(module.moduleTitle);
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Delete'),
                     ),
                   ],
                 ),

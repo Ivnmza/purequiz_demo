@@ -45,7 +45,7 @@ class GoToModuleButton extends StatelessWidget {
   const GoToModuleButton({super.key, required this.module, required this.db});
   final IsarService db;
   final Module module;
-  
+
   @override
   Widget build(BuildContext context) {
     return Hero(
@@ -54,7 +54,7 @@ class GoToModuleButton extends StatelessWidget {
         onPressed: () => QuizListScreen.navigate(context, module, db),
         onLongPress: () => {
           Navigator.of(context).push(HeroDialogRoute(builder: (context) {
-            return const AddTodoPopupCard();
+            return AddTodoPopupCard(module: module, db: db);
           }))
         },
         style: ElevatedButton.styleFrom(

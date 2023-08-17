@@ -33,6 +33,17 @@ class IsarService {
     await isar.writeTxn(() => isar.clear());
   }
 
+  ///////
+  ///
+  ///
+
+  Future<void> deleteModule(String moduleTitle) async{
+    final isar = await database;
+   // await isar.modules.filter().moduleTitleEqualTo(moduleTitle).deleteFirst();
+    isar.writeTxn(() => isar.modules.filter().moduleTitleEqualTo(moduleTitle).deleteFirst());
+
+  }
+
 //////////////////////////////////////////
 //////////////////////////////////////////
   /// SAVING TO DB METHODS
