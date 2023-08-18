@@ -52,6 +52,18 @@ class IsarService {
     });
   }
 
+Future<void> updateModule(Module module,String newModelTitle) async {
+  final isar = await database;
+  final moduleToUpdate = Module()..id = module.id..moduleTitle=newModelTitle;
+  logger.d(module.id);
+
+  isar.writeTxn(() async {
+
+    await isar.modules.put(moduleToUpdate);
+  });
+}
+  
+
 //////////////////////////////////////////
 //////////////////////////////////////////
   /// SAVING TO DB METHODS

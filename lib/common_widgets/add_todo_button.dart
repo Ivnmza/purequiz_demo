@@ -57,7 +57,7 @@ const String _heroAddTodo = 'mod3';
 /// {@endtemplate}
 class AddTodoPopupCard extends StatefulWidget {
   /// {@macro add_todo_popup_card}
-  AddTodoPopupCard({super.key, required this.module, required this.db});
+  const AddTodoPopupCard({super.key, required this.module, required this.db});
   final Module module;
   final IsarService db;
 
@@ -71,12 +71,14 @@ class _AddTodoPopupCardState extends State<AddTodoPopupCard> {
   final _formKey = GlobalKey<FormState>();
 
   void _updateModule() {
-    if (_formKey.currentState!.validate()) {
-      widget.db.saveModule(Module()..moduleTitle = _textController.text.trim());
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("New Module '${_textController.text}' saved in DB")));
-      Navigator.pop(context);
-    }
+    setState(() {
+      if (_formKey.currentState!.validate()) {
+        widget.db.updateModule(widget.module, _textController.text.trim());
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("New Module '${_textController.text}' saved in DB")));
+        Navigator.pop(context);
+      }
+    });
   }
 
   @override
