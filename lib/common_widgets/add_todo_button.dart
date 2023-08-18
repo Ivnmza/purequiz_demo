@@ -55,11 +55,29 @@ const String _heroAddTodo = 'mod3';
 /// [HeroDialogRoute] to achieve the popup effect.
 ///
 /// {@endtemplate}
-class AddTodoPopupCard extends StatelessWidget {
+class AddTodoPopupCard extends StatefulWidget {
   /// {@macro add_todo_popup_card}
-  const AddTodoPopupCard({super.key, required this.module, required this.db});
+  AddTodoPopupCard({super.key, required this.module, required this.db});
   final Module module;
   final IsarService db;
+
+  @override
+  State<AddTodoPopupCard> createState() => _AddTodoPopupCardState();
+}
+
+class _AddTodoPopupCardState extends State<AddTodoPopupCard> {
+  final _textController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+
+  void _updateModule() {
+    if (_formKey.currentState!.validate()) {
+      widget.db.saveModule(Module()..moduleTitle = _textController.text.trim());
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("New Module '${_textController.text}' saved in DB")));
+      Navigator.pop(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +85,7 @@ class AddTodoPopupCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Hero(
-          tag: module.moduleTitle,
+          tag: widget.module.moduleTitle,
           createRectTween: (begin, end) {
             return MaterialRectCenterArcTween(begin: begin, end: end);
           },
@@ -82,14 +100,36 @@ class AddTodoPopupCard extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(module.moduleTitle),
-                    Text(module.id.toString()),
-                    const TextField(
-                      decoration: InputDecoration(
-                        hintText: 'New todo',
-                        border: InputBorder.none,
+                    Form(
+                      key: _formKey,
+                      child: TextFormField(
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 32.0,
+                        ),
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                            icon: const Icon(Icons.settings),
+                            border: InputBorder.none,
+                            hintText: widget.module.moduleTitle,
+                            hintStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 32.0,
+                            )),
+                        controller: _textController,
+                        autofocus: false,
+                        onFieldSubmitted: (value) {
+                          _updateModule();
+                        },
+                        validator: (value) {
+                          if (value == null ||
+                              value.trim().isEmpty ||
+                              value.isEmpty) {
+                            return "Info not allowed to be empty";
+                          }
+                          return null;
+                        },
                       ),
-                      cursorColor: Colors.white,
                     ),
                     const Divider(
                       color: Colors.white,
@@ -110,7 +150,7 @@ class AddTodoPopupCard extends StatelessWidget {
                     TextButton(
                       onPressed: () {},
                       onLongPress: () {
-                        db.deleteModule(module.moduleTitle);
+                        widget.db.deleteModule(widget.module.moduleTitle);
                         Navigator.pop(context);
                       },
                       child: const Text('Delete'),
