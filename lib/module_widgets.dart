@@ -54,7 +54,7 @@ class GoToModuleButton extends StatelessWidget {
         onPressed: () => QuizListScreen.navigate(context, module, db),
         onLongPress: () => {
           Navigator.of(context).push(HeroDialogRoute(builder: (context) {
-            return AddTodoPopupCard(module: module, db: db);
+            return ModifyModuleDialog(module: module, db: db);
           }))
         },
         style: ElevatedButton.styleFrom(

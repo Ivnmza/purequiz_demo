@@ -177,6 +177,19 @@ Future<void> updateModule(Module module,String newModelTitle) async {
     return await isar.modules.where().exportJson();
   }
 
+   Future<List<String>> getListModuleStrings() async {
+    final isar = await database;
+     List<String> listOfModules = [];
+    var a = await isar.modules.where().exportJson();
+        var hm = List.from(a);
+
+    for (var element in hm) {
+      listOfModules.add(element['moduleTitle']);
+    }
+    return listOfModules;
+  }
+
+
   Future<void> exportAllModulesToJsonFile() async {
     final isar = await database;
     Uint8List dataBytes;

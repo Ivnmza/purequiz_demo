@@ -27,7 +27,7 @@ class AddTodoButton extends StatelessWidget {
           }));
         },
         child: Hero(
-          tag: _heroAddTodo,
+          tag: '_heroAddTodo',
           createRectTween: (begin, end) {
             return MaterialRectCenterArcTween(begin: begin, end: end);
           },
@@ -48,27 +48,37 @@ class AddTodoButton extends StatelessWidget {
 }
 
 /// Tag-value used for the add todo popup button.
-const String _heroAddTodo = 'mod3';
 
 /// {@template add_todo_popup_card}
 /// Popup card to add a new [Todo]. Should be used in conjuction with
 /// [HeroDialogRoute] to achieve the popup effect.
 ///
 /// {@endtemplate}
-class AddTodoPopupCard extends StatefulWidget {
+class ModifyModuleDialog extends StatefulWidget {
   /// {@macro add_todo_popup_card}
-  const AddTodoPopupCard({super.key, required this.module, required this.db});
+  const ModifyModuleDialog({super.key, required this.module, required this.db});
   final Module module;
   final IsarService db;
 
   @override
-  State<AddTodoPopupCard> createState() => _AddTodoPopupCardState();
+  State<ModifyModuleDialog> createState() => _ModifyModuleDialogState();
 }
 
-class _AddTodoPopupCardState extends State<AddTodoPopupCard> {
+class _ModifyModuleDialogState extends State<ModifyModuleDialog> {
   final _textController = TextEditingController();
-
   final _formKey = GlobalKey<FormState>();
+
+  List listOfModules = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getModuleStrings();
+  }
+
+  void getModuleStrings() async {
+    listOfModules = await db.getListModuleStrings();
+  }
 
   void _updateModule() {
     setState(() {
@@ -109,7 +119,6 @@ class _AddTodoPopupCardState extends State<AddTodoPopupCard> {
                           color: Colors.white,
                           fontSize: 32.0,
                         ),
-                        textAlign: TextAlign.center,
                         decoration: InputDecoration(
                             icon: const Icon(Icons.settings),
                             border: InputBorder.none,
@@ -127,7 +136,9 @@ class _AddTodoPopupCardState extends State<AddTodoPopupCard> {
                           if (value == null ||
                               value.trim().isEmpty ||
                               value.isEmpty) {
-                            return "Info not allowed to be empty";
+                            return "Info not to be empty";
+                          } else if (listOfModules.contains(value.trim())) {
+                            return "Module already exists";
                           }
                           return null;
                         },
