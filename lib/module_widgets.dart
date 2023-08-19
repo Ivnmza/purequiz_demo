@@ -95,3 +95,128 @@ class AddModuleButton extends StatelessWidget {
     );
   }
 }
+
+class ModifyModuleDialog extends StatefulWidget {
+  /// {@macro add_todo_popup_card}
+  const ModifyModuleDialog({super.key, required this.module, required this.db});
+  final Module module;
+  final IsarService db;
+
+  @override
+  State<ModifyModuleDialog> createState() => _ModifyModuleDialogState();
+}
+
+class _ModifyModuleDialogState extends State<ModifyModuleDialog> {
+  final _textController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  List listOfModules = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getModuleStrings();
+  }
+
+  void getModuleStrings() async {
+    listOfModules = await db.getListModuleStrings();
+  }
+
+  void _updateModule() {
+    setState(() {
+      if (_formKey.currentState!.validate()) {
+        widget.db.updateModule(widget.module, _textController.text.trim());
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("New Module '${_textController.text}' saved in DB")));
+        Navigator.pop(context);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Hero(
+          tag: widget.module.moduleTitle,
+          createRectTween: (begin, end) {
+            return MaterialRectCenterArcTween(begin: begin, end: end);
+          },
+          child: Material(
+            color: const Color.fromARGB(255, 89, 80, 253),
+            elevation: 2,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Form(
+                      key: _formKey,
+                      child: TextFormField(
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 32.0,
+                        ),
+                        decoration: InputDecoration(
+                            icon: const Icon(Icons.settings),
+                            border: InputBorder.none,
+                            hintText: widget.module.moduleTitle,
+                            hintStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 32.0,
+                            )),
+                        controller: _textController,
+                        autofocus: false,
+                        onFieldSubmitted: (value) {
+                          _updateModule();
+                        },
+                        validator: (value) {
+                          if (value == null ||
+                              value.trim().isEmpty ||
+                              value.isEmpty) {
+                            return "Info not to be empty";
+                          } else if (listOfModules.contains(value.trim())) {
+                            return "Module already exists";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const Divider(
+                      color: Colors.white,
+                      thickness: 0.2,
+                    ),
+                    const TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Write a note',
+                        border: InputBorder.none,
+                      ),
+                      cursorColor: Colors.white,
+                      maxLines: 6,
+                    ),
+                    const Divider(
+                      color: Colors.white,
+                      thickness: 0.2,
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      onLongPress: () {
+                        widget.db.deleteModule(widget.module.moduleTitle);
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Delete'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
