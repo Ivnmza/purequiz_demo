@@ -33,9 +33,11 @@ class IsarService {
     await isar.writeTxn(() => isar.clear());
   }
 
-  ///////
-  ///
-  ///
+  //////////////////////////////////////////
+  /////////////////////////////////////////
+  ///.///////////////////////////////////
+  ///////////////////////////////////////
+  ///////////////////////////////////////////
 
   Future<void> deleteModule(String moduleTitle) async {
     final isar = await database;
@@ -52,17 +54,41 @@ class IsarService {
     });
   }
 
-Future<void> updateModule(Module module,String newModelTitle) async {
-  final isar = await database;
-  final moduleToUpdate = Module()..id = module.id..moduleTitle=newModelTitle;
-  logger.d(module.id);
+  Future<void> updateModule(Module module, String newModelTitle) async {
+    final isar = await database;
+    final moduleToUpdate = Module()
+      ..id = module.id
+      ..moduleTitle = newModelTitle;
+    final listOfQuizes = await isar.quizs
+        .filter()
+        .containingModuleStringEqualTo(module.moduleTitle)
+        .findAll();
+    for (var element in listOfQuizes) {
+      element.containingModuleString = newModelTitle;
+      isar.writeTxn(() async {
+        await isar.quizs.put(element);
+      });
+    }
 
-  isar.writeTxn(() async {
+    logger.d(module.id);
 
-    await isar.modules.put(moduleToUpdate);
-  });
-}
-  
+    isar.writeTxn(() async {
+      await isar.modules.put(moduleToUpdate);
+    });
+    isar.writeTxn(() async {});
+  }
+
+  Future<List<String>> getListModuleStrings() async {
+    final isar = await database;
+    List<String> listOfModules = [];
+    var a = await isar.modules.where().exportJson();
+    var hm = List.from(a);
+
+    for (var element in hm) {
+      listOfModules.add(element['moduleTitle']);
+    }
+    return listOfModules;
+  }
 
 //////////////////////////////////////////
 //////////////////////////////////////////
@@ -176,19 +202,6 @@ Future<void> updateModule(Module module,String newModelTitle) async {
     final isar = await database;
     return await isar.modules.where().exportJson();
   }
-
-   Future<List<String>> getListModuleStrings() async {
-    final isar = await database;
-     List<String> listOfModules = [];
-    var a = await isar.modules.where().exportJson();
-        var hm = List.from(a);
-
-    for (var element in hm) {
-      listOfModules.add(element['moduleTitle']);
-    }
-    return listOfModules;
-  }
-
 
   Future<void> exportAllModulesToJsonFile() async {
     final isar = await database;
