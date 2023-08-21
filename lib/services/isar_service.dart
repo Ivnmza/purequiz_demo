@@ -39,43 +39,47 @@ class IsarService {
   ///////////////////////////////////////
   ///////////////////////////////////////////
 
-  Future<void> deleteModule(String moduleTitle) async {
+  Future<void> deleteModule(Module module) async {
     final isar = await database;
     isar.writeTxn(() {
-      isar.questions.filter().moduleStringEqualTo(moduleTitle).deleteAll();
+      isar.questions
+          .filter()
+          .moduleStringEqualTo(module.moduleTitle)
+          .deleteAll();
       isar.quizs
           .filter()
-          .containingModuleStringEqualTo(moduleTitle)
+          .containingModuleStringEqualTo(module.moduleTitle)
           .deleteAll();
-      return isar.modules
-          .filter()
-          .moduleTitleEqualTo(moduleTitle)
-          .deleteFirst();
+      return isar.modules.delete(module.id);
     });
   }
 
-  Future<void> updateModule(Module module, String newModelTitle) async {
+  Future<void> updateModule(Module module, String newModuleTitle) async {
     final isar = await database;
-    final moduleToUpdate = Module()
-      ..id = module.id
-      ..moduleTitle = newModelTitle;
+    final listOfQuestions = await isar.questions
+        .filter()
+        .moduleStringEqualTo(module.moduleTitle)
+        .findAll();
+    for (var element in listOfQuestions) {
+      element.moduleString = newModuleTitle;
+      isar.writeTxn(() async {
+        await isar.questions.put(element);
+      });
+    }
     final listOfQuizes = await isar.quizs
         .filter()
         .containingModuleStringEqualTo(module.moduleTitle)
         .findAll();
     for (var element in listOfQuizes) {
-      element.containingModuleString = newModelTitle;
+      element.containingModuleString = newModuleTitle;
       isar.writeTxn(() async {
         await isar.quizs.put(element);
       });
     }
-
-    logger.d(module.id);
-
+    module.moduleTitle = newModuleTitle;
     isar.writeTxn(() async {
-      await isar.modules.put(moduleToUpdate);
+      await isar.modules.put(module);
     });
-    isar.writeTxn(() async {});
   }
 
   Future<List<String>> getListModuleStrings() async {
@@ -88,6 +92,48 @@ class IsarService {
       listOfModules.add(element['moduleTitle']);
     }
     return listOfModules;
+  }
+
+  Future<List<String>> getListQuizzesStrings() async {
+    final isar = await database;
+    List<String> result = [];
+    var query = await isar.quizs.where().exportJson();
+    var list = List.from(query);
+
+    for (var element in list) {
+      result.add(element['title']);
+    }
+    logger.d("quizStrings:$result");
+    return result;
+  }
+
+  Future<void> updateQuiz(Quiz quiz, String newQuizTitle) async {
+    final isar = await database;
+    final listOfQuestions =
+        await isar.questions.filter().quizStringEqualTo(quiz.title).findAll();
+    for (var element in listOfQuestions) {
+      element.quizString = newQuizTitle;
+      isar.writeTxn(() async {
+        await isar.questions.put(element);
+      });
+    }
+    quiz.title = newQuizTitle;
+    isar.writeTxn(() async {
+      await isar.quizs.put(quiz);
+    });
+  }
+
+  Future<void> deleteQuiz(Quiz quiz) async {
+    final isar = await database;
+    isar.writeTxn(() {
+      isar.questions.filter().quizStringEqualTo(quiz.title).deleteAll();
+      return isar.quizs.delete(quiz.id);
+    });
+  }
+
+  Future<void> deleteQuestion(Question question) async {
+    final isar = await database;
+    isar.writeTxn(() => isar.questions.delete(question.id));
   }
 
 //////////////////////////////////////////

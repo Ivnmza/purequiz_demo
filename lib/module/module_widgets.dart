@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'common_widgets/container_transition.dart';
-import 'common_widgets/hero_dialog_route.dart';
-import 'constants/app_sizes.dart';
-import 'constants/constants.dart';
-import 'model/module.dart';
+import '../common_widgets/hero_dialog_route.dart';
+import '../constants/app_sizes.dart';
+import '../constants/constants.dart';
+import '../model/module.dart';
 import 'module_modal.dart';
-import 'quiz_grid_screen.dart';
-import 'services/isar_service.dart';
-import 'common_widgets/add_todo_button.dart';
+import '../quiz/quiz_grid_screen.dart';
+import '../services/isar_service.dart';
 
 class ModuleGridView extends StatelessWidget {
   const ModuleGridView({super.key});
@@ -51,7 +49,7 @@ class GoToModuleButton extends StatelessWidget {
     return Hero(
       tag: module.moduleTitle,
       child: ElevatedButton(
-        onPressed: () => QuizListScreen.navigate(context, module, db),
+        onPressed: () => QuizScreen.navigate(context, module, db),
         onLongPress: () => {
           Navigator.of(context).push(HeroDialogRoute(builder: (context) {
             return ModifyModuleDialog(module: module, db: db);
@@ -127,7 +125,7 @@ class _ModifyModuleDialogState extends State<ModifyModuleDialog> {
       if (_formKey.currentState!.validate()) {
         widget.db.updateModule(widget.module, _textController.text.trim());
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("New Module '${_textController.text}' saved in DB")));
+            content: Text("Module updated: '${_textController.text}' in DB")));
         Navigator.pop(context);
       }
     });
@@ -151,8 +149,9 @@ class _ModifyModuleDialogState extends State<ModifyModuleDialog> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(40.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Form(
@@ -187,26 +186,10 @@ class _ModifyModuleDialogState extends State<ModifyModuleDialog> {
                         },
                       ),
                     ),
-                    const Divider(
-                      color: Colors.white,
-                      thickness: 0.2,
-                    ),
-                    const TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Write a note',
-                        border: InputBorder.none,
-                      ),
-                      cursorColor: Colors.white,
-                      maxLines: 6,
-                    ),
-                    const Divider(
-                      color: Colors.white,
-                      thickness: 0.2,
-                    ),
                     TextButton(
                       onPressed: () {},
                       onLongPress: () {
-                        widget.db.deleteModule(widget.module.moduleTitle);
+                        widget.db.deleteModule(widget.module);
                         Navigator.pop(context);
                       },
                       child: const Text('Delete'),

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:purequiz_demo/common_widgets/add_todo_button.dart';
 import 'package:purequiz_demo/common_widgets/common_widgets.dart';
 import 'package:purequiz_demo/constants/constants.dart';
 import 'package:logger/logger.dart';
 import 'package:purequiz_demo/heroanimtest.dart';
 
-import 'module_widgets.dart';
+import 'module/module_widgets.dart';
 
 var logger = Logger(
   printer: PrettyPrinter(),

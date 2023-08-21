@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:purequiz_demo/model/quiz.dart';
-import 'model/module.dart';
+import '../model/module.dart';
 import '/services/isar_service.dart';
 
 class AddQuizModal extends StatefulWidget {

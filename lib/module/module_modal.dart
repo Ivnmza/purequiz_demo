@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'model/module.dart';
+import '../model/module.dart';
 import '/services/isar_service.dart';
 
 class ModuleModal extends StatefulWidget {
