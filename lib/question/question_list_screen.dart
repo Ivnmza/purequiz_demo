@@ -34,70 +34,6 @@ class QuestionListScreen extends StatelessWidget {
   }
 }
 
-class QuestionInstance extends StatelessWidget {
-  const QuestionInstance({super.key, required this.question});
-  final Question question;
-  @override
-  Widget build(BuildContext context) {
-    return ShowAnswerButton(context: context, question: question);
-  }
-}
-
-class ShowAnswerButton extends StatelessWidget {
-  const ShowAnswerButton(
-      {super.key, required this.context, required this.question});
-  final BuildContext context;
-  final Question question;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: ElevatedButton(
-        onPressed: () {
-          _showAnswerModalSheet(context, question);
-        },
-        onLongPress: (){
-          db.deleteQuestion(question);
-        },
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(25),
-          backgroundColor: const Color.fromARGB(255, 79, 79, 79),
-        ),
-        child: Text(question.question),
-      ),
-    );
-  }
-}
-
-void _showAnswerModalSheet(context, question) async {
-  return showModalBottomSheet<void>(
-    context: context,
-    builder: (BuildContext context) {
-      return ShowAnswerModal(question: question);
-    },
-  );
-}
-
-class ShowAnswerModal extends StatelessWidget {
-  const ShowAnswerModal({super.key, required this.question});
-  final Question question;
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(question.answer),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class QuestionListView extends StatelessWidget {
   const QuestionListView({super.key, required this.quiz});
   final Quiz quiz;
@@ -123,6 +59,48 @@ class QuestionListView extends StatelessWidget {
       ],
     );
   }
+}
+
+class QuestionInstance extends StatelessWidget {
+  const QuestionInstance({super.key, required this.question});
+  final Question question;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: ElevatedButton(
+        onPressed: () {
+          _showAnswerModalSheet(context, question);
+        },
+        onLongPress: () {
+          db.deleteQuestion(question);
+        },
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(25),
+          backgroundColor: const Color.fromARGB(255, 79, 79, 79),
+        ),
+        child: Text(style: const TextStyle(fontSize: 20), question.question),
+      ),
+    );
+  }
+}
+
+void _showAnswerModalSheet(context, question) async {
+  return showModalBottomSheet<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return SizedBox(
+        height: 300,
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: ListView(children: [
+            Center(
+                child: Text(question.answer,style: const TextStyle(fontSize: 20),)),
+          ]),
+        ),
+      );
+    },
+  );
 }
 
 class AddQuestionButton extends StatelessWidget {
