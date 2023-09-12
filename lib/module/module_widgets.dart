@@ -8,6 +8,71 @@ import 'module_modal.dart';
 import '../quiz/quiz_grid_screen.dart';
 import '../services/isar_service.dart';
 
+class MySearch extends StatefulWidget {
+  const MySearch({super.key});
+
+  @override
+  State<MySearch> createState() => _MySearchState();
+}
+
+class _MySearchState extends State<MySearch> {
+  @override
+  Widget build(BuildContext context) {
+    return SearchAnchor(
+        viewLeading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+            Navigator.of(context).pop();
+          },
+          style: const ButtonStyle(
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+        ),
+        builder: (BuildContext context, SearchController controller) {
+          return SearchBar(
+            controller: controller,
+            padding: const MaterialStatePropertyAll<EdgeInsets>(
+                EdgeInsets.symmetric(horizontal: 16.0)),
+            shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
+              return RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10));
+            }),
+            onTap: () {
+              controller.openView();
+            },
+            onChanged: (_) {
+              controller.openView();
+            },
+            leading: const Icon(Icons.search),
+            trailing: <Widget>[
+              Tooltip(
+                message: 'Change brightness mode',
+                child: IconButton(
+                  onPressed: () {
+                    FocusScope.of(context).unfocus();
+                    setState(() {
+                      controller.text = '';
+                    });
+                  },
+                  icon: const Icon(Icons.close),
+                ),
+              )
+            ],
+          );
+        },
+        suggestionsBuilder:
+            (BuildContext context, SearchController controller) {
+              List<ListTile> a = [];
+              return a;
+       
+        });
+  }
+}
+
 class ModuleGridView extends StatelessWidget {
   const ModuleGridView({super.key});
 
@@ -15,6 +80,7 @@ class ModuleGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        MySearch(),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(Sizes.p8),
@@ -130,7 +196,6 @@ class _ModifyModuleDialogState extends State<ModifyModuleDialog> {
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
