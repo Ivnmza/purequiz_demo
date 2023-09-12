@@ -9,8 +9,6 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - share_plus (0.0.1):
-    - Flutter
 
 DEPENDENCIES:
   - document_file_save_plus (from `.symlinks/plugins/document_file_save_plus/ios`)
@@ -18,7 +16,6 @@ DEPENDENCIES:
   - flutter_document_picker (from `.symlinks/plugins/flutter_document_picker/ios`)
   - isar_flutter_libs (from `.symlinks/plugins/isar_flutter_libs/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
-  - share_plus (from `.symlinks/plugins/share_plus/ios`)
 
 EXTERNAL SOURCES:
   document_file_save_plus:
@@ -31,16 +28,13 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/isar_flutter_libs/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
-  share_plus:
-    :path: ".symlinks/plugins/share_plus/ios"
 
 SPEC CHECKSUMS:
   document_file_save_plus: 913d440d8b611ae19add4522ed578e3ed1483a2f
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_document_picker: 109ba1c4622e6e62bfced17c22ff544a9a3541f4
   isar_flutter_libs: b69f437aeab9c521821c3f376198c4371fa21073
-  path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
-  share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
+  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
 
 PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
 

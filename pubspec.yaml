@@ -15,13 +15,14 @@ dependencies:
   isar_flutter_libs: 3.0.5
   cupertino_icons: ^1.0.2
   path_provider: 2.0.15
-  share_plus: ^6.3.0
   flutter_animate: ^4.2.0+1
   logger: ^1.4.0
   document_file_save_plus: ^2.0.0
   flutter_document_picker: ^5.2.3
   shimmer: ^3.0.0
   animations: ^2.0.7
+  circular_countdown_timer: ^0.2.3
+
 
 
 dev_dependencies:
