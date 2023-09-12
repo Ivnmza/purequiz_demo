@@ -80,7 +80,6 @@ class ModuleGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        MySearch(),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(Sizes.p8),
