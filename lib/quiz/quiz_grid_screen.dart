@@ -1,11 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:purequiz_demo/common_widgets/hero_dialog_route.dart';
+import 'package:purequiz_demo/take_quiz/take_quiz_screen.dart';
 import '../main.dart';
 import 'add_quiz_modal.dart';
 import '../model/quiz.dart';
 import '../question/question_list_screen.dart';
 import '../services/isar_service.dart';
 import '../model/module.dart';
+
+class QuizScreen extends StatelessWidget {
+  const QuizScreen({Key? key, required this.module, required this.db})
+      : super(key: key);
+  final Module module;
+  final IsarService db;
+  static void navigate(context, Module module, IsarService db) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return QuizScreen(module: module, db: db);
+    }));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text(module.moduleTitle)),
+        bottomNavigationBar: AddQuizButton(module: module),
+        body: QuizGridView(module: module));
+  }
+}
 
 class QuizGridView extends StatelessWidget {
   const QuizGridView({super.key, required this.module});
@@ -36,26 +57,6 @@ class QuizGridView extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class QuizScreen extends StatelessWidget {
-  const QuizScreen({Key? key, required this.module, required this.db})
-      : super(key: key);
-  final Module module;
-  final IsarService db;
-  static void navigate(context, Module module, IsarService db) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return QuizScreen(module: module, db: db);
-    }));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text(module.moduleTitle)),
-        bottomNavigationBar: AddQuizButton(module: module),
-        body: QuizGridView(module: module));
   }
 }
 
@@ -144,8 +145,8 @@ class _UpdateQuizDialogState extends State<UpdateQuizDialog> {
     logger.d("$listOfQuizzes");
   }
 
-  void _updateQuiz(){
-    if(_formKey.currentState!.validate()) {
+  void _updateQuiz() {
+    if (_formKey.currentState!.validate()) {
       widget.db.updateQuiz(widget.quiz, _textController.text.trim());
       Navigator.pop(context);
     }
@@ -171,6 +172,7 @@ class _UpdateQuizDialogState extends State<UpdateQuizDialog> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Form(
                       key: _formKey,
@@ -208,19 +210,20 @@ class _UpdateQuizDialogState extends State<UpdateQuizDialog> {
                       color: Colors.white,
                       thickness: 0.2,
                     ),
-                    const TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Write a note',
-                        border: InputBorder.none,
-                      ),
-                      cursorColor: Colors.white,
-                      maxLines: 6,
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return  TakeQuizScreen(quiz: widget.quiz);
+                        }));
+                      },
+                      child: const Text('Quiz'),
                     ),
                     const Divider(
                       color: Colors.white,
                       thickness: 0.2,
                     ),
-                    TextButton(
+                    OutlinedButton(
                       onPressed: () {},
                       onLongPress: () {
                         widget.db.deleteQuiz(widget.quiz);
