@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:purequiz_demo/common_widgets/common_widgets.dart';
 import 'package:purequiz_demo/constants/constants.dart';
 import 'package:logger/logger.dart';
-import 'package:purequiz_demo/heroanimtest.dart';
 
 import 'module/module_widgets.dart';
 
@@ -40,10 +39,12 @@ class ModuleScreen extends StatelessWidget {
           actions: const [ExportJsonFileButton(), PickDocument()],
         ),
         bottomNavigationBar: const AddModuleButton(),
-        body: const Stack(children: [
-          ModuleGridView(),
-          GoToAnimTestButton(),
-        ]));
+        body: GestureDetector(
+            onTap: () {
+              logger.d("here");
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: ModuleGridView()));
   }
 }
 
