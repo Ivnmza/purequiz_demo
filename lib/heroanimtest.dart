@@ -21,12 +21,26 @@ class GoToAnimTestButton extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
           child: const Icon(
-            Icons.add_rounded,
+            Icons.search,
             size: 56,
           ),
         ),
       ),
     );
+  }
+}
+
+class Search extends StatefulWidget {
+  const Search({super.key});
+
+  @override
+  State<Search> createState() => _SearchState();
+}
+
+class _SearchState extends State<Search> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }
 
