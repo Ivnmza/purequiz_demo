@@ -148,6 +148,8 @@ class _UpdateQuizDialogState extends State<UpdateQuizDialog> {
   void _updateQuiz() {
     if (_formKey.currentState!.validate()) {
       widget.db.updateQuiz(widget.quiz, _textController.text.trim());
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Quiz title updated: '${_textController.text}'")));
       Navigator.pop(context);
     }
   }
@@ -182,7 +184,7 @@ class _UpdateQuizDialogState extends State<UpdateQuizDialog> {
                           fontSize: 32.0,
                         ),
                         decoration: InputDecoration(
-                            icon: const Icon(Icons.settings),
+                            icon: const Icon(Icons.edit),
                             border: InputBorder.none,
                             hintText: widget.quiz.title,
                             hintStyle: const TextStyle(

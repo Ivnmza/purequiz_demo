@@ -48,8 +48,6 @@ class ModuleScreen extends StatelessWidget {
   }
 }
 
-
-
 // 0: First imported package and checked main dart file to see  if any initialization code is necessary(as  it  was for hive)
   //:  
 //  1: Create Models

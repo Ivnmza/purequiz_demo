@@ -86,7 +86,6 @@ void _showAnswerModalSheet(context, question) async {
       return Padding(
         padding: const EdgeInsets.all(18.0),
         child: ListView(
-          physics: const ClampingScrollPhysics(),
           children: [
             Center(
               child:

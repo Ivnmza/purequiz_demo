@@ -190,7 +190,7 @@ class _ModifyModuleDialogState extends State<ModifyModuleDialog> {
       if (_formKey.currentState!.validate()) {
         widget.db.updateModule(widget.module, _textController.text.trim());
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Module updated: '${_textController.text}' in DB")));
+            content: Text("Module updated: '${_textController.text}'")));
         Navigator.pop(context);
       }
     });
@@ -226,7 +226,7 @@ class _ModifyModuleDialogState extends State<ModifyModuleDialog> {
                           fontSize: 32.0,
                         ),
                         decoration: InputDecoration(
-                            icon: const Icon(Icons.settings),
+                            icon: const Icon(Icons.edit),
                             border: InputBorder.none,
                             hintText: widget.module.moduleTitle,
                             hintStyle: const TextStyle(
